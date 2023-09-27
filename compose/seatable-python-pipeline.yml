@@ -1,0 +1,93 @@
+---
+services:
+
+  caddy:
+    ports:
+      - ${SEATABLE_SCHEDULER_PORT}:${SEATABLE_SCHEDULER_PORT}
+    networks:
+      - seatable-scheduler-net
+
+  seatable:
+    environment:
+      - SEATABLE_SCHEDULER_AUTHTOKEN=${SEATABLE_SCHEDULER_AUTHTOKEN}
+
+
+# seatable-python-pipeline
+# Optional labels for lets encrypt staging or custom certificates
+# caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
+# caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
+  seatable-python-scheduler:
+    image: ${SEATABLE_SCHEDULER_IMAGE}
+    container_name: seatable-python-scheduler
+    volumes:
+      - "/opt/seatable-python-scheduler/shared:/shared"
+    environment:
+      - DB_HOST=seatable-python-scheduler-db
+      - DB_ROOT_PASSWD=${SEATABLE_SCHEDULER_MYSQL_ROOT_PASSWORD}
+      - SEATABLE_FAAS_SCHEDULER_SERVER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
+      - TIME_ZONE=${TIME_ZONE}
+      - SEATABLE_SCHEDULER_AUTHTOKEN=${SEATABLE_SCHEDULER_AUTHTOKEN}
+    labels:
+      caddy: ${SEATABLE_SCHEDULER_HOSTNAME}:${SEATABLE_SCHEDULER_PORT}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+    depends_on:
+      seatable-python-scheduler-db:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - seatable-net
+      - seatable-scheduler-net
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'python3 scheduler.py' && pgrep -f 'python3 flask_server.py'"]
+      interval: 20s
+      retries: 3
+      start_period: 20s
+      timeout: 10s
+
+  seatable-python-scheduler-db:
+    image: ${SEATABLE_SCHEDULER_DB_IMAGE}
+    container_name: seatable-python-scheduler-db
+    volumes:
+      - "/opt/seatable-python-scheduler-mariadb:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${SEATABLE_SCHEDULER_MYSQL_ROOT_PASSWORD}
+      - MYSQL_LOG_CONSOLE=true
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=true
+      - MARIADB_MYSQL_LOCALHOST_USER=1
+      - MARIADB_MYSQL_LOCALHOST_GRANTS=USAGE
+    networks:
+      - seatable-scheduler-net
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      interval: 10s
+      retries: 3
+      timeout: 5s
+
+  seatable-python-starter:
+    image: ${SEATABLE_STARTER_IMAGE}
+    container_name: seatable-python-starter
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/opt/seatable-python-starter:/opt/seatable-python-starter"
+    environment:
+      - SEATABLE_SCHEDULER_SCHEME=${SEATABLE_SCHEDULER_SCHEME}
+      - SEATABLE_SCHEDULER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
+      - SEATABLE_SCHEDULER_PORT=${SEATABLE_SCHEDULER_PORT}
+      - IMAGE=${SEATABLE_RUNNER_IMAGE}
+    expose:
+      - 8080
+    networks:
+      - seatable-scheduler-net
+    entrypoint: ["tail", "-f", "/dev/null"]
+
+  seatable-python-runner:
+    image: ${SEATABLE_RUNNER_IMAGE} # this image just needs to be pulled
+    container_name: seatable-python-runner
+    networks:
+      - seatable-scheduler-net
+      # network definiton to prevent addtitional default docker network
+
+networks:
+  seatable-scheduler-net:
+    name: seatable-scheduler-net

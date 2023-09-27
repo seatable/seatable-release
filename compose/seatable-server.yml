@@ -1,0 +1,71 @@
+---
+services:
+
+# Seatable-Server
+# Optional labels for lets encrypt staging or custom certificates
+# caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
+# caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
+  seatable:
+    image: ${SEATABLE_IMAGE}
+    container_name: seatable
+    volumes:
+      - "/opt/seatable-server/seatable-data:/shared"
+    environment:
+      - DB_HOST=seatable-db
+      - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD}
+      - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME}
+      - TIME_ZONE=${TIME_ZONE}
+    labels:
+      caddy: ${SEATABLE_SERVER_HOSTNAME}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+    depends_on:
+      seatable-db:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      redis:
+        condition: service_started
+    networks:
+      - seatable-net
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl --fail http://localhost || exit 1"]
+    #   interval: 20s
+    #   retries: 3
+    #   start_period: 20s
+    #   timeout: 10s
+
+  seatable-db:
+    image: ${SEATABLE_DB_IMAGE}
+    container_name: seatable-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD}
+      - MYSQL_LOG_CONSOLE=true
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=true
+      - MARIADB_MYSQL_LOCALHOST_USER=1
+      - MARIADB_MYSQL_LOCALHOST_GRANTS=USAGE
+    volumes:
+      - "/opt/seatable-mariadb:/var/lib/mysql"
+    networks:
+      - seatable-net
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      interval: 10s
+      retries: 3
+      timeout: 5s
+
+  memcached:
+    image: ${SEATABLE_MEMCACHED_IMAGE}
+    container_name: seatable-memcached
+    entrypoint: memcached -m 256
+    networks:
+      - seatable-net
+
+  redis:
+    image: ${SEATABLE_REDIS_IMAGE}
+    container_name: seatable-redis
+    networks:
+      - seatable-net
+
+networks:
+  seatable-net:
+    name: seatable-net

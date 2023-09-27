@@ -1,0 +1,23 @@
+---
+services:
+
+# Webserver / Reverse-proxy
+# Volume :/data/ is for acme and :/data/certs/ for custom certificates
+  caddy:
+    image: ${SEATABLE_CADDY_IMAGE}
+    restart: unless-stopped
+    container_name: seatable-caddy
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - CADDY_INGRESS_NETWORKS=seatable-net
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/opt/seatable-caddy:/data"
+    networks:
+      - seatable-net
+
+networks:
+  seatable-net:
+    name: seatable-net
