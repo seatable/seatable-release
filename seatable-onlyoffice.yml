@@ -13,4 +13,4 @@ services:
       - /opt/seatable-onlyoffice/lib:/var/lib/onlyoffice
       - /opt/seatable-onlyoffice:/etc/onlyoffice/documentserver
     networks:
-      - seatable-net
+      - backend-seatable-net

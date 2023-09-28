@@ -16,8 +16,8 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/opt/seatable-caddy:/data"
     networks:
-      - seatable-net
+      - frontend-net
 
 networks:
-  seatable-net:
-    name: seatable-net
+  frontend-net:
+    name: frontend-net

@@ -15,6 +15,7 @@ services:
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD}
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME}
       - TIME_ZONE=${TIME_ZONE}
+      - SEATABLE_SCHEDULER_AUTHTOKEN=${SEATABLE_SCHEDULER_AUTHTOKEN}
     labels:
       caddy: ${SEATABLE_SERVER_HOSTNAME}
       caddy.reverse_proxy: "{{upstreams 80}}"
@@ -26,7 +27,8 @@ services:
       redis:
         condition: service_started
     networks:
-      - seatable-net
+      - frontend-net
+      - backend-seatable-net
     # healthcheck:
     #   test: ["CMD-SHELL", "curl --fail http://localhost || exit 1"]
     #   interval: 20s
@@ -46,7 +48,7 @@ services:
     volumes:
       - "/opt/seatable-mariadb:/var/lib/mysql"
     networks:
-      - seatable-net
+      - backend-seatable-net
     healthcheck:
       test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
       interval: 10s
@@ -58,14 +60,16 @@ services:
     container_name: seatable-memcached
     entrypoint: memcached -m 256
     networks:
-      - seatable-net
+      - backend-seatable-net
 
   redis:
     image: ${SEATABLE_REDIS_IMAGE}
     container_name: seatable-redis
     networks:
-      - seatable-net
+      - backend-seatable-net
 
 networks:
-  seatable-net:
-    name: seatable-net
+  frontend-net:
+    name: frontend-net
+  backend-seatable-net:
+    name: backend-seatable-net
