@@ -65,15 +65,14 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/opt/seatable-python-starter:/opt/seatable-python-starter"
     environment:
-      - SEATABLE_SCHEDULER_SCHEME=${SEATABLE_SCHEDULER_SCHEME}
-      - SEATABLE_SCHEDULER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
-      - SEATABLE_SCHEDULER_PORT=${SEATABLE_SCHEDULER_PORT}
+      - PYTHON_SCHEDULER_SCHEME=${SEATABLE_SCHEDULER_SCHEME}
+      - PYTHON_SCHEDULER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
+      - PYTHON_SCHEDULER_PORT=${SEATABLE_SCHEDULER_PORT}
       - IMAGE=${SEATABLE_RUNNER_IMAGE}
     expose:
       - 8080
     networks:
       - backend-scheduler-net
-    entrypoint: ["tail", "-f", "/dev/null"]
 
   seatable-python-runner:
     image: ${SEATABLE_RUNNER_IMAGE} # this image just needs to be pulled
