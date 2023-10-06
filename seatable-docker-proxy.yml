@@ -4,7 +4,7 @@ services:
 # Webserver / Reverse-proxy
 # Volume :/data/ is for acme and :/data/certs/ for custom certificates
   caddy:
-    image: ${SEATABLE_CADDY_IMAGE}
+    image: ${SEATABLE_CADDY_IMAGE:-lucaslorentz/caddy-docker-proxy:2.8.8-alpine}
     restart: unless-stopped
     container_name: seatable-caddy
     ports:

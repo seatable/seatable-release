@@ -11,7 +11,7 @@ services:
 # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
 # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable-python-scheduler:
-    image: ${SEATABLE_SCHEDULER_IMAGE}
+    image: ${SEATABLE_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:build_1}
     container_name: seatable-python-scheduler
     volumes:
       - "/opt/seatable-python-scheduler/shared:/shared"
@@ -40,7 +40,7 @@ services:
       timeout: 10s
 
   seatable-python-scheduler-db:
-    image: ${SEATABLE_SCHEDULER_DB_IMAGE}
+    image: ${SEATABLE_SCHEDULER_DB_IMAGE:-mariadb:10.11}
     container_name: seatable-python-scheduler-db
     volumes:
       - "/opt/seatable-python-scheduler-mariadb:/var/lib/mysql"
@@ -59,7 +59,7 @@ services:
       timeout: 5s
 
   seatable-python-starter:
-    image: ${SEATABLE_STARTER_IMAGE}
+    image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:build_1}
     container_name: seatable-python-starter
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -75,7 +75,7 @@ services:
       - backend-scheduler-net
 
   seatable-python-runner:
-    image: ${SEATABLE_RUNNER_IMAGE} # this image just needs to be pulled
+    image: ${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:build_1} # this image just needs to be pulled
     container_name: seatable-python-runner
     networks:
       - backend-scheduler-net

@@ -2,7 +2,7 @@
 services:
 
   onlyoffice:
-    image: ${SEATABLE_ONLYOFFICE_IMAGE}
+    image: ${SEATABLE_ONLYOFFICE_IMAGE:-onlyoffice/documentserver:7.4}
     container_name: seatable-onlyoffice
     environment:
       - JWT_ENABLED=${ONLYOFFICE_JWT_ENABLED}

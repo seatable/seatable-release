@@ -6,7 +6,7 @@ services:
 # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
 # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable:
-    image: ${SEATABLE_IMAGE}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.1.9}
     container_name: seatable
     volumes:
       - "/opt/seatable-server/seatable-data:/shared"
@@ -37,7 +37,7 @@ services:
     #   timeout: 10s
 
   seatable-db:
-    image: ${SEATABLE_DB_IMAGE}
+    image: ${SEATABLE_DB_IMAGE:-mariadb:10.11}
     container_name: seatable-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD}
@@ -56,14 +56,14 @@ services:
       timeout: 5s
 
   memcached:
-    image: ${SEATABLE_MEMCACHED_IMAGE}
+    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.5.6}
     container_name: seatable-memcached
     entrypoint: memcached -m 256
     networks:
       - backend-seatable-net
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:5.0.7}
     container_name: seatable-redis
     networks:
       - backend-seatable-net
