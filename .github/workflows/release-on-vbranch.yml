@@ -15,7 +15,7 @@ jobs:
 
       - name: Get branch name
         id: branch_name
-        run: echo "branch_name=$(basename ${GITHUB_REF})"
+        run: echo "branch_name=$(basename ${GITHUB_REF})" >> $GITHUB_OUTPUT
 
       - name: Compress action step
         uses: a7ul/tar-action@v1.1.3
