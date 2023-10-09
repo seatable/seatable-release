@@ -3,7 +3,7 @@ services:
 
   caddy:
     ports:
-      - ${SEATABLE_SCHEDULER_PORT}:${SEATABLE_SCHEDULER_PORT}
+      - ${SEATABLE_SCHEDULER_PORT:-12012}:${SEATABLE_SCHEDULER_PORT:-12012}
 
 
 # seatable-python-pipeline
@@ -22,7 +22,7 @@ services:
       - TIME_ZONE=${TIME_ZONE}
       - SEATABLE_SCHEDULER_AUTHTOKEN=${SEATABLE_SCHEDULER_AUTHTOKEN}
     labels:
-      caddy: ${SEATABLE_SCHEDULER_HOSTNAME}:${SEATABLE_SCHEDULER_PORT}
+      caddy: ${SEATABLE_SCHEDULER_HOSTNAME}:${SEATABLE_SCHEDULER_PORT:-12012}
       caddy.reverse_proxy: "{{upstreams 80}}"
     depends_on:
       seatable-python-scheduler-db:
@@ -67,7 +67,7 @@ services:
     environment:
       - PYTHON_SCHEDULER_SCHEME=${SEATABLE_SCHEDULER_SCHEME}
       - PYTHON_SCHEDULER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
-      - PYTHON_SCHEDULER_PORT=${SEATABLE_SCHEDULER_PORT}
+      - PYTHON_SCHEDULER_PORT=${SEATABLE_SCHEDULER_PORT:-12012}
       - IMAGE=${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:build_1}
     expose:
       - 8080
