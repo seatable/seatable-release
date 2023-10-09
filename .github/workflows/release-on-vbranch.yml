@@ -21,11 +21,11 @@ jobs:
           command: c
           files: |
             release/
-          outPath: seatable-compose-${{ github.ref }}.tar.gz
+          outPath: "seatable-compose-${{ github.ref }}.tar.gz"
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
           files: |
-            seatable-compose-${{ github.ref }}.tar.gz
+            "seatable-compose-${{ github.ref }}.tar.gz"
