@@ -12,7 +12,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Compress action step
         uses: a7ul/tar-action@v1.1.3
@@ -21,11 +21,11 @@ jobs:
           command: c
           files: |
             release/
-          outPath: seatable-compose-$(basename ${GITHUB_REF}).tar.gz
+          outPath: seatable-compose-${{ github.ref }}.tar.gz
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: tag_name
           files: |
-            seatable-compose-$(basename ${GITHUB_REF}).tar.gz
+            seatable-compose-${{ github.ref }}.tar.gz
