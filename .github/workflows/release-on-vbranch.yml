@@ -32,3 +32,4 @@ jobs:
           tag_name: ${{ steps.branch_name.outputs.branch_name }}
           files: |
             seatable-compose.tar.gz
+
