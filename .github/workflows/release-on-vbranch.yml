@@ -20,7 +20,7 @@ jobs:
         with:
           command: c
           files: |
-            ./release/
+            release/
           outPath: seatable-compose.tar.gz
 
       - name: Release
