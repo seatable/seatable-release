@@ -16,6 +16,7 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v1
+        tag_name: tag_name
         with:
           files: |
            ./release/.*
