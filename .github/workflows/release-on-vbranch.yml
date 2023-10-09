@@ -18,14 +18,14 @@ jobs:
         uses: a7ul/tar-action@v1.1.3
         id: compress
         with:
-          command: c -C release/
+          command: c
           files: |
-            .
-          outPath: seatable-compose.tar.gz
+            release/
+          outPath: seatable-compose-$(basename ${GITHUB_REF}).tar.gz
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: tag_name
           files: |
-            seatable-compose.tar.gz
+            seatable-compose-$(basename ${GITHUB_REF}).tar.gz
