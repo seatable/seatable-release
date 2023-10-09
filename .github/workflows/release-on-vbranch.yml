@@ -14,10 +14,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Compress action step
+        uses: a7ul/tar-action@v1.1.3
+        id: compress
+        with:
+          command: c
+          files: |
+            ./release/.*
+            ./release/*
+          outPath: seatable-compose.tar.gz
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: tag_name
           files: |
-           ./release/.*
-           ./release/*
+            seatable-compose.tar.gz
