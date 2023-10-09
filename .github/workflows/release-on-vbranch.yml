@@ -18,9 +18,9 @@ jobs:
         uses: a7ul/tar-action@v1.1.3
         id: compress
         with:
-          command: c
+          command: c -C release/
           files: |
-            release/
+            .
           outPath: seatable-compose.tar.gz
 
       - name: Release
