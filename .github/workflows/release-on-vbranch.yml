@@ -24,11 +24,11 @@ jobs:
           command: c
           files: |
             release/
-          outPath: "seatable-compose-${{ steps.branch_name.outputs.branch_name }}.tar.gz"
+          outPath: seatable-compose-${{ steps.branch_name.outputs.branch_name }}.tar.gz
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.branch_name.outputs.branch_name }}
           files: |
-            "seatable-compose-${{ steps.branch_name.outputs.branch_name }}.tar.gz"
+            seatable-compose-${{ steps.branch_name.outputs.branch_name }}.tar.gz
