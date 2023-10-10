@@ -13,7 +13,7 @@ To prepare a new release, you can use these steps:
 - Clone this repository & Checkout a new branch with the Naming Convention `v*.*.*` (e.g. `v4.1.9`)
 - Make changes, commit and push your changes
 - Create a pull request
-- All files in the 'release/' directory will be uploaded to the release as the tarbal <seatbale-compose.tar.gz> and tagged with the branchname / version
+- All files in the 'release/' directory will be uploaded to the release as the tarbal <seatbale-compose.tar.gz> and the release will be tagged with the branchname / version
 
 ```bash
 git clone <this_repo>
@@ -30,5 +30,5 @@ The `latest` tag will always point to the latest release.
 To download the latest tarball you can use this url:
 [https://github.com/seatable/seatable-compose/releases/latest/download/seatable-compose.tar.gz](https://github.com/seatable/seatable-compose/releases/latest/download/seatable-compose.tar.gz)\
 \
-To download a specific release you can use this scheme of url:
+To download a specific release you can use these types of urls (example):\
 [https://github.com/seatable/seatable-compose/releases/tag/v4.1.9/seatable-compose.tar.gz](https://github.com/seatable/seatable-compose/releases/tag/v4.1.9/seatable-compose.tar.gz)
