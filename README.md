@@ -1,13 +1,13 @@
-### Docker Compose Deploy
+## SeaTable Docker Compose Releases
 This repository contains a docker compose project to deploy SeaTable Server and addtional services like the Python Pipeline or Only Office.
 
 Releases will be referenced in the [SeaTable Admin Manual](https://admin.seatable.io/). Distribution Method will be git clone or wget | tar download of a release.
 
-#### Releases
+### Releases
 The releases are named after the SeaTable version they are based on.
 The tag `latest` will always point to the latest release.
 
-#### Usage
+### Usage
 To prepare a new release, you can use these steps:
 
 - Clone this repository & Checkout a new branch with the Naming Convention `v*.*.*` (e.g. `v4.1.9`)
