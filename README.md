@@ -11,6 +11,7 @@ The tag `latest` will always point to the latest release.
 To prepare a new release, you can use these steps:
 
 - Clone this repository & Checkout a new branch with the Naming Convention `v*.*.*` (e.g. `v4.1.9`)
+- Use compose-var.py to check variables in the release/.yml files
 - Make changes, commit and push your changes
 - Create a pull request
 - All files in the 'release/' directory will be uploaded to the release as the tarbal <seatbale-compose.tar.gz> and the release will be tagged with the branchname / version
@@ -19,6 +20,11 @@ To prepare a new release, you can use these steps:
 git clone <this_repo>
 cd <this_repos_directory>
 git checkout -b <new_branch> #e.g. v4.1.9
+```
+```bash
+# print all ${} or only IMAGE variables in the release/.yml files
+python compose-var.py
+python compose-var.py -image
 ```
 ```bash
 git add <relevant_changes>
