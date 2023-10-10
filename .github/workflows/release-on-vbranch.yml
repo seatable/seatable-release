@@ -17,14 +17,17 @@ jobs:
         id: branch_name
         run: echo "branch_name=$(basename ${GITHUB_REF})" >> $GITHUB_OUTPUT
 
-      - name: Compress action step
-        uses: a7ul/tar-action@v1.1.3
-        id: compress
-        with:
-          command: c
-          files: |
-            release/
-          outPath: seatable-compose.tar.gz
+      # - name: Compress action step
+      #   uses: a7ul/tar-action@v1.1.3
+      #   id: compress
+      #   with:
+      #     command: c
+      #     files: |
+      #       release/
+      #     outPath: seatable-compose.tar.gz
+
+      - name: Compress release folder
+        run: tar -czvf seatable-compose.tar.gz -C release/ .
 
       - name: Release
         uses: softprops/action-gh-release@v1

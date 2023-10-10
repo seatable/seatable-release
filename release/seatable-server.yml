@@ -9,7 +9,8 @@ services:
     image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.1.9}
     container_name: seatable
     volumes:
-      - "/opt/seatable-server/seatable-data:/shared"
+      - "/opt/seatable-server:/shared"
+      - "/opt/seatable-compose/seatable-license.txt:/shared/seatable/seatable-license.txt"
     environment:
       - DB_HOST=seatable-db
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD}
