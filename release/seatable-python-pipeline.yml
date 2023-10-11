@@ -17,7 +17,7 @@ services:
       - "/opt/seatable-python-scheduler/shared:/shared"
     environment:
       - DB_HOST=seatable-python-scheduler-db
-      - DB_ROOT_PASSWD=${SEATABLE_SCHEDULER_MYSQL_ROOT_PASSWORD}
+      - DB_ROOT_PASSWD=${SEATABLE_SCHEDULER_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - SEATABLE_FAAS_SCHEDULER_SERVER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
       - TIME_ZONE=${TIME_ZONE}
       - SEATABLE_SCHEDULER_AUTHTOKEN=${SEATABLE_SCHEDULER_AUTHTOKEN}
@@ -45,9 +45,8 @@ services:
     volumes:
       - "/opt/seatable-python-scheduler-mariadb:/var/lib/mysql"
     environment:
-      - MYSQL_ROOT_PASSWORD=${SEATABLE_SCHEDULER_MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${SEATABLE_SCHEDULER_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - MYSQL_LOG_CONSOLE=true
-      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=true
       - MARIADB_MYSQL_LOCALHOST_USER=1
       - MARIADB_MYSQL_LOCALHOST_GRANTS=USAGE
     networks:
