@@ -8,18 +8,19 @@ The releases are named after the SeaTable version they are based on.
 The tag `latest` will always point to the latest release.
 
 ### Usage
-To prepare a new release, you can use these steps:
-
-- Clone this repository & Checkout a new branch with the Naming Convention `v*.*.*` (e.g. `v4.1.9`)
+- Develop on "wip/" branches, merge back into main
+#### To prepare a new release:
+- Clone this repository & Checkout a new branch with the Naming Convention `release-v*.*.*` (e.g. `release-v4.1.9`)
 - Use compose-var.py to check variables in the release/.yml files
-- Make changes, commit and push your changes
-- Create a pull request
+- Make changes, commit and push your changes -> a relase is being created
+- Bugfixes needing other SeaTbale image versions get their own new relase branch
+- Bugfixes concerning only the deployment can be done in the correspondign release branch
 - All files in the 'release/' directory will be uploaded to the release as the tarbal <seatbale-compose.tar.gz> and the release will be tagged with the branchname / version
 
 ```bash
 git clone <this_repo>
 cd <this_repos_directory>
-git checkout -b <new_branch> #e.g. v4.1.9
+git checkout -b <new_branch> #e.g. release-v4.1.9
 ```
 ```bash
 # print all ${} or only IMAGE variables in the release/.yml files
