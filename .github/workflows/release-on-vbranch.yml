@@ -16,13 +16,9 @@ jobs:
       - name: Compress release folder
         run: tar -czvf seatable-compose.tar.gz -C release/ .
 
-      - name: Get branch name
-        id: branch_name
-        run: echo "branch_name=$(basename ${GITHUB_REF})" >> $GITHUB_OUTPUT
-
-      - name: Set tag name
+      - name: Get tag name
         id: tag_name
-        run: echo "::set-output name=tag_name::${{ steps.branch_name.outputs.branch_name | replace('release-', '') }}" >> $GITHUB_OUTPUT
+        run: echo "tag_name=$(basename ${GITHUB_REF} | sed 's/release-//')" >> $GITHUB_OUTPUT
 
       - name: Release
         uses: softprops/action-gh-release@v1
