@@ -10,7 +10,10 @@ services:
     container_name: seatable
     volumes:
       - "/opt/seatable-server:/shared"
-      - "/opt/seatable-compose/seatable-license.txt:/shared/seatable/seatable-license.txt"
+      - type: bind
+        source: "./seatable-license.txt"
+        target: "/shared/seatable/seatable-license.txt"
+        read_only: true
     environment:
       - DB_HOST=seatable-db
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
