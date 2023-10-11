@@ -13,16 +13,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Get branch name
-        id: branch_name
-        run: echo "branch_name=$(basename ${GITHUB_REF})" >> $GITHUB_OUTPUT
-
       - name: Compress release folder
         run: tar -czvf seatable-compose.tar.gz -C release/ .
+
+      - name: Get tag name
+        id: tag_name
+        run: echo "tag_name=$(basename ${GITHUB_REF} | sed 's/release-//')" >> $GITHUB_OUTPUT
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ replace(steps.branch_name.outputs.branch_name, 'release-', '') }}
+          tag_name: ${{ steps.tag_name.outputs.tag_name }}
           files: |
             seatable-compose.tar.gz
