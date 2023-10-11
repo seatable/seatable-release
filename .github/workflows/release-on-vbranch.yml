@@ -23,6 +23,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ replace(steps.branch_name.outputs.branch_name, 'release-', '') }}
+          tag_name: ${{ startsWith(steps.branch_name.outputs.branch_name, 'release-') && steps.branch_name.outputs.branch_name.substring(8) }}
           files: |
             seatable-compose.tar.gz
