@@ -13,8 +13,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Compress release folder
-        run: tar -czvf seatable-compose.tar.gz -C release/ .
+      - name: Compress content of compose folder
+        run: tar -czvf seatable-compose.tar.gz -C compose/ .
 
       - name: Get tag name
         id: tag_name

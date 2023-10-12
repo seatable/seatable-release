@@ -11,7 +11,7 @@ def main():
     args = parser.parse_args()
 
     # Define the path to the release folder
-    release_folder = "release/"
+    release_folder = "compose/"
 
     # Loop through all .yml files in the release folder
     for filename in os.listdir(release_folder):
