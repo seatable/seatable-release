@@ -38,4 +38,4 @@ To download the latest tarball you can use this url:
 [https://github.com/seatable/seatable-compose/releases/latest/download/seatable-compose.tar.gz](https://github.com/seatable/seatable-compose/releases/latest/download/seatable-compose.tar.gz)\
 \
 To download a specific release you can use these types of urls (example):\
-[https://github.com/seatable/seatable-compose/releases/tag/v4.1.9/seatable-compose.tar.gz](https://github.com/seatable/seatable-compose/releases/tag/v4.1.9/seatable-compose.tar.gz)
+[https://github.com/seatable/seatable-release/releases/download/v4.1.9/seatable-compose.tar.gz](https://github.com/seatable/seatable-release/releases/download/v4.1.9/seatable-compose.tar.gz)
