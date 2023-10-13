@@ -3,8 +3,8 @@ services:
 
   caddy:
     ports:
-      - ${SEATABLE_SCHEDULER_PORT:-12011}:${SEATABLE_SCHEDULER_PORT:-12011}
 
+      - ${SEATABLE_SCHEDULER_PORT:-12011}:${SEATABLE_SCHEDULER_PORT:-12011}
 
 # seatable-python-pipeline
 # Optional labels for lets encrypt staging or custom certificates
