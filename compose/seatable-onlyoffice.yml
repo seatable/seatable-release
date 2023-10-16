@@ -11,6 +11,5 @@ services:
       - /opt/seatable-onlyoffice/logs:/var/log/onlyoffice
       - /opt/seatable-onlyoffice/data:/var/www/onlyoffice/Data
       - /opt/seatable-onlyoffice/lib:/var/lib/onlyoffice
-      - /opt/seatable-onlyoffice:/etc/onlyoffice/documentserver
     networks:
       - backend-seatable-net
