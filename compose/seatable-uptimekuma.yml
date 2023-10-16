@@ -1,0 +1,18 @@
+---
+services:
+
+  caddy:
+    ports:
+
+      - ${UPTIMEKUMA_PORT:-6230}:${UPTIMEKUMA_PORT:-6230}
+
+  uptimekuma:
+    image: ${SEATABLE_UPTIMEKUMA_IMAGE:-louislam/uptime-kuma:1.23.3}
+    container_name: seatable-uptimekuma
+    volumes:
+      - /opt/uptime-kuma:/app/data
+    labels:
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:${UPTIMEKUMA_PORT:-6230}
+      caddy.reverse_proxy: "{{upstreams 3001}}"
+    networks:
+      - frontend-net
