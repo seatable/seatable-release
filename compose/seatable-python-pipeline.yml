@@ -63,11 +63,13 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/opt/seatable-python-starter:/opt/seatable-python-starter"
+      - "${TRANSFER_DIRECTORY}:${TRANSFER_DIRECTORY}"
     environment:
       - PYTHON_SCHEDULER_SCHEME=${SEATABLE_SCHEDULER_SCHEME}
       - PYTHON_SCHEDULER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
       - PYTHON_SCHEDULER_PORT=${SEATABLE_SCHEDULER_PORT:-12011}
       - IMAGE=${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:build_1}
+      - TRANSFER_DIRECTORY=${TRANSFER_DIRECTORY}
     expose:
       - 8080
     networks:
