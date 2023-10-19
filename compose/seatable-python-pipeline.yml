@@ -58,16 +58,18 @@ services:
       timeout: 5s
 
   seatable-python-starter:
-    image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:build_1}
+    image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:build_2}
     container_name: seatable-python-starter
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/opt/seatable-python-starter:/opt/seatable-python-starter"
+      - "${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-starter}:${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-starter}"
     environment:
       - PYTHON_SCHEDULER_SCHEME=${SEATABLE_SCHEDULER_SCHEME}
       - PYTHON_SCHEDULER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
       - PYTHON_SCHEDULER_PORT=${SEATABLE_SCHEDULER_PORT:-12011}
       - IMAGE=${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:build_1}
+      - TRANSFER_DIRECTORY=${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-starter}
     expose:
       - 8080
     networks:
