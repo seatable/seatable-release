@@ -63,7 +63,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/opt/seatable-python-starter:/opt/seatable-python-starter"
-      - "${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-starter}:${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-starter}"
+      - "${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-transfer}:${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-transfer}"
     environment:
       - PYTHON_SCHEDULER_SCHEME=${SEATABLE_SCHEDULER_SCHEME}
       - PYTHON_SCHEDULER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
