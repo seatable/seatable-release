@@ -1,0 +1,59 @@
+---
+services:
+
+  caddy:
+    ports:
+
+      - ${UPTIMEKUMA_PORT:-6231}:${UPTIMEKUMA_PORT:-6231}
+
+  postgres:
+    image: postgres:11
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-root}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Variable is not set or empty}
+      - POSTGRES_DB=${POSTGRES_DB:-n8n}
+      - POSTGRES_NON_ROOT_USER=${POSTGRES_NON_ROOT_USER:-non_root_user}
+      - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD:?Variable is not set or empty}
+    volumes:
+      - "/opt/seatable-n8n-postgresdb:/var/lib/postgresql/data"
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-n8n}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - backend-n8n-net
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+    # ports:
+    #   - 5678:5678
+    # links:
+    #   - postgres
+    volumes:
+      - "/opt/seatable-n8n:/home/node/.n8n"
+    labels:
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:${N8N_PORT:-6231}
+      caddy.reverse_proxy: "{{upstreams 5678}}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - frontend-net
+      - backend-n8n-net
+
+networks:
+  frontend-net:
+    name: frontend-net
+  backend-n8n-net:
+    name: backend-n8n-net
