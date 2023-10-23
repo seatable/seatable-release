@@ -18,7 +18,7 @@ services:
       - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD:?Variable is not set or empty}
     volumes:
       - "/opt/seatable-n8n-postgresdb:/var/lib/postgresql/data"
-      - ""./seatable-n8n-init-data.sh:/docker-entrypoint-initdb.d/init-data.sh"
+      - "./seatable-n8n-init-data.sh:/docker-entrypoint-initdb.d/init-data.sh"
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-n8n}']
       interval: 5s
