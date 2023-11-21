@@ -12,8 +12,8 @@ The tag `latest` will always point to the latest release.
 #### To prepare a new release:
 - Clone this repository & Checkout a new branch with the Naming Convention `release-v*.*.*` (e.g. `release-v4.1.9`)
 - Use compose-var.py to check variables in the compose/.yml files
-- Make changes, commit and push your changes -> a relase is being created
-- Bugfixes needing other SeaTbale image versions get their own new relase branch
+- Make changes, commit and push your changes -> a release is being created
+- Bugfixes needing other SeaTable image versions get their own new relase branch
 - Bugfixes concerning only the deployment can be done in the correspondign release branch
 - All files in the 'compose/' directory will be uploaded to the release as the tarbal <seatbale-compose.tar.gz> and the release will be tagged with the branchname / version
 
