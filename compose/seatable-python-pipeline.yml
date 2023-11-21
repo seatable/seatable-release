@@ -17,6 +17,7 @@ services:
     networks:
       - frontend-net
       - backend-scheduler-net
+      - backend-seatable-net
     healthcheck:
       test: ["CMD-SHELL", "pgrep -f 'python3 scheduler.py' && pgrep -f 'python3 flask_server.py'"]
       interval: 20s
