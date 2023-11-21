@@ -1,32 +1,17 @@
 ---
 services:
-
-  caddy:
-    ports:
-
-      - ${SEATABLE_SCHEDULER_PORT:-12011}:${SEATABLE_SCHEDULER_PORT:-12011}
-
-# seatable-python-pipeline
-# Optional labels for lets encrypt staging or custom certificates
-# caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
-# caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable-python-scheduler:
-    image: ${SEATABLE_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:build_1}
+    image: ${SEATABLE_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:4.2.9}
     container_name: seatable-python-scheduler
-    volumes:
-      - "/opt/seatable-python-scheduler/shared:/shared"
     environment:
-      - DB_HOST=seatable-python-scheduler-db
-      - DB_ROOT_PASSWD=${SEATABLE_SCHEDULER_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
-      - SEATABLE_FAAS_SCHEDULER_SERVER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
       - TIME_ZONE=${TIME_ZONE}
-      - SEATABLE_SCHEDULER_AUTHTOKEN=${SEATABLE_SCHEDULER_AUTHTOKEN}
-    labels:
-      caddy: ${SEATABLE_SCHEDULER_HOSTNAME}:${SEATABLE_SCHEDULER_PORT:-12011}
-      caddy.reverse_proxy: "{{upstreams 80}}"
-    depends_on:
-      seatable-python-scheduler-db:
-        condition: service_healthy
+      - DB_HOST=${SEATABLE_MYSQL_HOST:-seatable-db}
+      - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN}
+      - SEATABLE_SERVER_URL=${SEATABLE_SERVER_URL}
+      - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://seatable-python-starter:8080}
+      - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
+      - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -39,48 +24,25 @@ services:
       start_period: 20s
       timeout: 10s
 
-  seatable-python-scheduler-db:
-    image: ${SEATABLE_SCHEDULER_DB_IMAGE:-mariadb:10.11}
-    container_name: seatable-python-scheduler-db
-    volumes:
-      - "/opt/seatable-python-scheduler-mariadb:/var/lib/mysql"
-    environment:
-      - MYSQL_ROOT_PASSWORD=${SEATABLE_SCHEDULER_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
-      - MYSQL_LOG_CONSOLE=true
-      - MARIADB_MYSQL_LOCALHOST_USER=1
-      - MARIADB_MYSQL_LOCALHOST_GRANTS=USAGE
-    networks:
-      - backend-scheduler-net
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
-      interval: 10s
-      retries: 3
-      timeout: 5s
-
   seatable-python-starter:
-    image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:build_2}
+    image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:4.2.9}
     container_name: seatable-python-starter
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/opt/seatable-python-starter:/opt/seatable-python-starter"
-      - "${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-transfer}:${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-transfer}"
+      - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
     environment:
-      - PYTHON_SCHEDULER_SCHEME=${SEATABLE_SCHEDULER_SCHEME}
-      - PYTHON_SCHEDULER_HOSTNAME=${SEATABLE_SCHEDULER_HOSTNAME}
-      - PYTHON_SCHEDULER_PORT=${SEATABLE_SCHEDULER_PORT:-12011}
-      - IMAGE=${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:build_1}
-      - TRANSFER_DIRECTORY=${SEATABLE_STARTER_TRANSFER_DIRECTORY:-/opt/seatable-python-starter}
-    expose:
-      - 8080
+      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL}
+      - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
+      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.9}
+      - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
     networks:
       - backend-scheduler-net
 
   seatable-python-runner:
-    image: ${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:build_1} # this image just needs to be pulled
+    image: ${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.9}
     container_name: seatable-python-runner
     networks:
       - backend-scheduler-net
-      # network definiton to prevent addtitional default docker network
 
 networks:
   frontend-net:
