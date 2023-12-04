@@ -1,12 +1,12 @@
 ---
 services:
-
-# Seatable-Server
-# Optional labels for lets encrypt staging or custom certificates
-# caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
-# caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
+  # Seatable-Server
+  # Optional labels for lets encrypt staging or custom certificates
+  # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
+  # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable:
     image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.1.9}
+    restart: unless-stopped
     container_name: seatable
     volumes:
       - "/opt/seatable-server:/shared"
@@ -42,6 +42,7 @@ services:
 
   seatable-db:
     image: ${SEATABLE_DB_IMAGE:-mariadb:10.11}
+    restart: unless-stopped
     container_name: seatable-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
@@ -53,13 +54,21 @@ services:
     networks:
       - backend-seatable-net
     healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      test:
+        [
+          "CMD",
+          "/usr/local/bin/healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized",
+        ]
       interval: 10s
       retries: 3
       timeout: 5s
 
   memcached:
     image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.5.6}
+    restart: unless-stopped
     container_name: seatable-memcached
     entrypoint: memcached -m 256
     networks:
@@ -67,6 +76,7 @@ services:
 
   redis:
     image: ${SEATABLE_REDIS_IMAGE:-redis:5.0.7}
+    restart: unless-stopped
     container_name: seatable-redis
     networks:
       - backend-seatable-net

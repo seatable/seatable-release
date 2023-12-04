@@ -1,15 +1,13 @@
 ---
 services:
-
   caddy:
     ports:
-
       - ${N8N_PORT:-6231}:${N8N_PORT:-6231}
 
   postgres:
     image: postgres:11
+    restart: unless-stopped
     container_name: seatable-n8n-postgres
-    restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-root}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Variable is not set or empty}
@@ -20,7 +18,11 @@ services:
       - "/opt/seatable-n8n-postgresdb:/var/lib/postgresql/data"
       - "./seatable-n8n-init-data.sh:/docker-entrypoint-initdb.d/init-data.sh"
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-n8n}']
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -h localhost -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-n8n}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -29,9 +31,9 @@ services:
 
   n8n:
     image: docker.n8n.io/n8nio/n8n
+    restart: unless-stopped
     container_name: seatable-n8n
     user: root
-    restart: always
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres

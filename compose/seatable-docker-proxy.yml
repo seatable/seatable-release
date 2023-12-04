@@ -1,10 +1,11 @@
 ---
 services:
-
-# Webserver / Reverse-proxy
-# Volume :/data/ is for acme and :/data/certs/ for custom certificates
+  ## Webserver / Reverse-proxy
+  # * responsible for TLS termination with let's encrypt or with custom certificates
+  # * the volume :/data/ is for acme and :/data/certs/ for custom certificates
+  # * read more details at ...
   caddy:
-    image: ${SEATABLE_CADDY_IMAGE:-lucaslorentz/caddy-docker-proxy:2.8.8-alpine}
+    image: ${SEATABLE_CADDY_IMAGE:-lucaslorentz/caddy-docker-proxy:2.8.10-alpine}
     restart: unless-stopped
     container_name: seatable-caddy
     ports:

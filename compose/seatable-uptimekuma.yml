@@ -1,13 +1,12 @@
 ---
 services:
-
   caddy:
     ports:
-
       - ${UPTIMEKUMA_PORT:-6230}:${UPTIMEKUMA_PORT:-6230}
 
   uptimekuma:
     image: ${SEATABLE_UPTIMEKUMA_IMAGE:-louislam/uptime-kuma:1.23.3}
+    restart: unless-stopped
     container_name: seatable-uptimekuma
     volumes:
       - /opt/seatable-uptime-kuma:/app/data

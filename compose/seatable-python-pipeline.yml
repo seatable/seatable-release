@@ -2,6 +2,7 @@
 services:
   seatable-python-scheduler:
     image: ${SEATABLE_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:4.2.9}
+    restart: unless-stopped
     container_name: seatable-python-scheduler
     environment:
       - TIME_ZONE=${TIME_ZONE}
@@ -19,7 +20,11 @@ services:
       - backend-scheduler-net
       - backend-seatable-net
     healthcheck:
-      test: ["CMD-SHELL", "pgrep -f 'python3 scheduler.py' && pgrep -f 'python3 flask_server.py'"]
+      test:
+        [
+          "CMD-SHELL",
+          "pgrep -f 'python3 scheduler.py' && pgrep -f 'python3 flask_server.py'",
+        ]
       interval: 20s
       retries: 3
       start_period: 20s
@@ -27,6 +32,7 @@ services:
 
   seatable-python-starter:
     image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:4.2.9}
+    restart: unless-stopped
     container_name: seatable-python-starter
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -41,6 +47,7 @@ services:
 
   seatable-python-runner:
     image: ${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.9}
+    restart: unless-stopped
     container_name: seatable-python-runner
     networks:
       - backend-scheduler-net
