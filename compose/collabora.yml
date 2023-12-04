@@ -1,0 +1,32 @@
+---
+services:
+  collabora:
+    image: ${COLLABORA_IMAGE:-collabora/code:22.05.14.3.1}
+    container_name: collabora
+    expose:
+      - 9980
+    cap_add:
+      - MKNOD
+    environment:
+      - "aliasgroup1=${SEATABLE_SERVER_HOSTNAME}"
+      - "server_name=${COLLABORA_SERVER_HOSTNAME:-}"
+      - "username=${COLLABORA_USER:-}"
+      - "password=${COLLABORA_PW:-}"
+      - "DONT_GEN_SSL_CERT=true"
+      - extra_params=--o:ssl.enable=false
+        --o:ssl.termination=true
+        --o:user_interface.mode=classic
+        --o:remote_font_config.url=${COOL_REMOTE_FONT:-}
+        --o:logging.file[@enable]=true
+        --o:logging.file.property[0]=/opt/cool/logs/coolwsd.log
+      - "TZ=${TIME_ZONE:-Europe/Berlin}"
+    volumes:
+      - "${INSTALL_DIR}/logs:/opt/cool/logs/" # chmod 777 needed
+    #labels:
+    #  caddy: ${COLLABORA_SERVER_HOSTNAME:-}
+    #  caddy.reverse_proxy: collabora-code:9980
+    networks:
+      - backend-seatable-net
+
+networks:
+  backend-seatable-net:

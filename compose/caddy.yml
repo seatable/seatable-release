@@ -5,9 +5,9 @@ services:
   # * the volume :/data/ is for acme and :/data/certs/ for custom certificates
   # * read more details at ...
   caddy:
-    image: ${SEATABLE_CADDY_IMAGE:-lucaslorentz/caddy-docker-proxy:2.8.10-alpine}
+    image: ${IMAGE_CADDY:-lucaslorentz/caddy-docker-proxy:2.8.10-alpine}
     restart: unless-stopped
-    container_name: seatable-caddy
+    container_name: caddy
     ports:
       - 80:80
       - 443:443
@@ -15,7 +15,7 @@ services:
       - CADDY_INGRESS_NETWORKS=frontend-net
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/opt/seatable-caddy:/data"
+      - "/opt/caddy:/data"
     networks:
       - frontend-net
 

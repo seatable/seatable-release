@@ -1,0 +1,15 @@
+---
+services:
+  onlyoffice:
+    image: ${SEATABLE_ONLYOFFICE_IMAGE:-onlyoffice/documentserver:7.5.1.1}
+    restart: unless-stopped
+    container_name: onlyoffice
+    environment:
+      - JWT_ENABLED=${ONLYOFFICE_JWT_ENABLED}
+      - JWT_SECRET=${ONLYOFFICE_JWT_SECRET}
+    volumes:
+      - /opt/onlyoffice/logs:/var/log/onlyoffice
+      - /opt/onlyoffice/data:/var/www/onlyoffice/Data
+      - /opt/onlyoffice/lib:/var/lib/onlyoffice
+    networks:
+      - backend-seatable-net

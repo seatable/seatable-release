@@ -4,10 +4,10 @@ services:
   # Optional labels for lets encrypt staging or custom certificates
   # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
   # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
-  seatable:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.1.9}
+  seatable-server:
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.2.11}
     restart: unless-stopped
-    container_name: seatable
+    container_name: seatable-server
     volumes:
       - "/opt/seatable-server:/shared"
       - type: bind
@@ -15,7 +15,7 @@ services:
         target: "/shared/seatable/seatable-license.txt"
         read_only: true
     environment:
-      - DB_HOST=seatable-db
+      - DB_HOST=mariadb
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       - TIME_ZONE=${TIME_ZONE}
@@ -24,7 +24,7 @@ services:
       caddy: ${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
     depends_on:
-      seatable-db:
+      mariadb:
         condition: service_healthy
       memcached:
         condition: service_started
@@ -40,17 +40,17 @@ services:
     #   start_period: 20s
     #   timeout: 10s
 
-  seatable-db:
-    image: ${SEATABLE_DB_IMAGE:-mariadb:10.11}
+  mariadb:
+    image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.6}
     restart: unless-stopped
-    container_name: seatable-mysql
+    container_name: mariadb
     environment:
       - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_MYSQL_LOCALHOST_USER=1
       - MARIADB_MYSQL_LOCALHOST_GRANTS=USAGE
     volumes:
-      - "/opt/seatable-mariadb:/var/lib/mysql"
+      - "/opt/mariadb:/var/lib/mysql"
     networks:
       - backend-seatable-net
     healthcheck:
@@ -67,17 +67,17 @@ services:
       timeout: 5s
 
   memcached:
-    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.5.6}
+    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.22-alpine}
     restart: unless-stopped
-    container_name: seatable-memcached
+    container_name: memcached
     entrypoint: memcached -m 256
     networks:
       - backend-seatable-net
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:5.0.7}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.3-alpine}
     restart: unless-stopped
-    container_name: seatable-redis
+    container_name: redis
     networks:
       - backend-seatable-net
 
