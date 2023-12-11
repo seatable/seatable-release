@@ -5,7 +5,7 @@ services:
   # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
   # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.3.0}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.3.0}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
