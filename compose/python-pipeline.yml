@@ -38,9 +38,9 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
     environment:
-      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL}
+      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-${SEATABLE_SERVER_URL}/scheduler}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
-      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.9}
+      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.10}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
     networks:
       - backend-scheduler-net

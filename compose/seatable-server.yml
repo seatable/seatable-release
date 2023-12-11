@@ -19,7 +19,7 @@ services:
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       - TIME_ZONE=${TIME_ZONE}
-      - PYTHON_SCHEDULER_AUTH_TOKEN=${SEATABLE_SCHEDULER_AUTH_TOKEN}
+      - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN}
     labels:
       caddy: ${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
