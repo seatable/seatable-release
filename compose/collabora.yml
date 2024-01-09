@@ -8,8 +8,8 @@ services:
     cap_add:
       - MKNOD
     environment:
-      - "aliasgroup1=${SEATABLE_SERVER_HOSTNAME}"
-      - "server_name=${COLLABORA_SERVER_HOSTNAME:-}"
+      - "aliasgroup1=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME}" # comma separated list of domais, allowed to use collabora online. e.g. https://cloud.seatable.io
+      - "server_name=${COLLABORA_SERVER_HOSTNAME:-}" # without protocol
       - "username=${COLLABORA_USER:-}"
       - "password=${COLLABORA_PW:-}"
       - "DONT_GEN_SSL_CERT=true"
@@ -21,10 +21,10 @@ services:
         --o:logging.file.property[0]=/opt/cool/logs/coolwsd.log
       - "TZ=${TIME_ZONE:-Europe/Berlin}"
     volumes:
-      - "${INSTALL_DIR}/logs:/opt/cool/logs/" # chmod 777 needed
-    #labels:
-    #  caddy: ${COLLABORA_SERVER_HOSTNAME:-}
-    #  caddy.reverse_proxy: collabora-code:9980
+      - "${INSTALL_DIR:-/opt/collabora}/logs:/opt/cool/logs/" # chmod 777 needed
+    labels:
+      caddy: ${COLLABORA_SERVER_HOSTNAME:-}
+      caddy.reverse_proxy: collabora:9980
     networks:
       - backend-seatable-net
 

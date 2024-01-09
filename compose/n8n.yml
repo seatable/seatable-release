@@ -3,8 +3,9 @@ services:
   caddy:
     ports:
       - ${N8N_PORT:-6231}:${N8N_PORT:-6231}
+
   n8n-postgres:
-    image: postgres:11
+    image: ${N8N_POSTGRES_IMAGE:-postgres:11}
     restart: unless-stopped
     container_name: n8n-postgres
     environment:
@@ -29,11 +30,17 @@ services:
       - backend-n8n-net
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n
+    image: ${N8N_IMAGE:-docker.n8n.io/n8nio/n8n}
     restart: unless-stopped
     container_name: n8n
     user: root
     environment:
+      - N8N_HOST=${N8N_HOSTNAME:?Variable is not set or empty}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=${N8N_PROTOCOL:-https}
+      - NODE_ENV=production
+      - WEBHOOK_URL=${N8N_PROTOCOL:-https}://${N8N_HOSTNAME:?Variable is not set or empty}/
+      - GENERIC_TIMEZONE=${TIME_ZONE}
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
@@ -43,10 +50,10 @@ services:
     volumes:
       - "/opt/n8n:/home/node/.n8n"
     labels:
-      caddy: ${SEATABLE_SERVER_HOSTNAME}:${N8N_PORT:-6231}
+      caddy: ${N8N_HOSTNAME:?Variable is not set or empty}:${N8N_PORT:-6231}
       caddy.reverse_proxy: "{{upstreams 5678}}"
     depends_on:
-      postgres:
+      n8n-postgres:
         condition: service_healthy
     networks:
       - frontend-net
