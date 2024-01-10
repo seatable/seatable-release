@@ -35,11 +35,11 @@ services:
     container_name: n8n
     user: root
     environment:
-      - N8N_HOST=${N8N_HOSTNAME:?Variable is not set or empty}
+      - N8N_HOST=${SEATABLE_SERVER_HOSTNAME}
       - N8N_PORT=5678
       - N8N_PROTOCOL=${N8N_PROTOCOL:-https}
       - NODE_ENV=production
-      - WEBHOOK_URL=${N8N_PROTOCOL:-https}://${N8N_HOSTNAME:?Variable is not set or empty}/
+      - WEBHOOK_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME}:${N8N_PORT:-6231}/
       - GENERIC_TIMEZONE=${TIME_ZONE}
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
@@ -50,7 +50,7 @@ services:
     volumes:
       - "/opt/n8n:/home/node/.n8n"
     labels:
-      caddy: ${N8N_HOSTNAME:?Variable is not set or empty}:${N8N_PORT:-6231}
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:${N8N_PORT:-6231}
       caddy.reverse_proxy: "{{upstreams 5678}}"
     depends_on:
       n8n-postgres:
