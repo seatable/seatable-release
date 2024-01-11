@@ -15,6 +15,9 @@ services:
       - /opt/onlyoffice/logs:/var/log/onlyoffice
       - /opt/onlyoffice/data:/var/www/onlyoffice/Data
       - /opt/onlyoffice/lib:/var/lib/onlyoffice
+    labels:
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233}
+      caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
       - frontend-net
 
