@@ -2,7 +2,7 @@
 services:
   caddy:
     ports:
-      - ${COLLABORA_PORT:-6232}:${COLLABORA:-6232}
+      - ${COLLABORA_PORT:-6232}:${COLLABORA_PORT:-6232}
 
   collabora:
     image: ${COLLABORA_IMAGE:-collabora/code:23.05.6.5.1}

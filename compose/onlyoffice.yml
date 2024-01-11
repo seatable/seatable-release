@@ -1,15 +1,23 @@
 ---
 services:
+  caddy:
+    ports:
+      - ${ONLYOFFICE_PORT:-6233}:${ONLYOFFICE_PORT:-6233}
+
   onlyoffice:
     image: ${SEATABLE_ONLYOFFICE_IMAGE:-onlyoffice/documentserver:7.5.1.1}
     restart: unless-stopped
     container_name: onlyoffice
     environment:
-      - JWT_ENABLED=${ONLYOFFICE_JWT_ENABLED}
-      - JWT_SECRET=${ONLYOFFICE_JWT_SECRET}
+      - JWT_ENABLED=${ONLYOFFICE_JWT_ENABLED:-true}
+      - JWT_SECRET=${ONLYOFFICE_JWT_SECRET:?Variable is not set or empty}
     volumes:
       - /opt/onlyoffice/logs:/var/log/onlyoffice
       - /opt/onlyoffice/data:/var/www/onlyoffice/Data
       - /opt/onlyoffice/lib:/var/lib/onlyoffice
     networks:
-      - backend-seatable-net
+      - frontend-net
+
+networks:
+  frontend-net:
+    name: frontend-net
