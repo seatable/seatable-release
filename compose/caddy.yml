@@ -1,9 +1,5 @@
 ---
 services:
-  ## Webserver / Reverse-proxy
-  # * responsible for TLS termination with let's encrypt or with custom certificates
-  # * the volume :/data/ is for acme and :/data/certs/ for custom certificates
-  # * read more details at ...
   caddy:
     image: ${IMAGE_CADDY:-lucaslorentz/caddy-docker-proxy:2.8.10-alpine}
     restart: unless-stopped
@@ -15,7 +11,7 @@ services:
       - CADDY_INGRESS_NETWORKS=frontend-net
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/opt/caddy:/data"
+      - "/opt/caddy:/data/caddy"
     networks:
       - frontend-net
 

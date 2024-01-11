@@ -3,6 +3,7 @@ services:
   caddy:
     ports:
       - ${UPTIMEKUMA_PORT:-6230}:${UPTIMEKUMA_PORT:-6230}
+
   uptime-kuma:
     image: ${SEATABLE_UPTIMEKUMA_IMAGE:-louislam/uptime-kuma:1.23.3}
     restart: unless-stopped
@@ -14,3 +15,7 @@ services:
       caddy.reverse_proxy: "{{upstreams 3001}}"
     networks:
       - frontend-net
+
+networks:
+  frontend-net:
+    name: frontend-net

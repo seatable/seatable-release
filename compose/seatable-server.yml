@@ -1,11 +1,7 @@
 ---
 services:
-  # Seatable-Server
-  # Optional labels for lets encrypt staging or custom certificates
-  # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
-  # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.3.3}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.3.4}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -36,12 +32,12 @@ services:
     networks:
       - frontend-net
       - backend-seatable-net
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl --fail http://localhost || exit 1"]
-    #   interval: 20s
-    #   retries: 3
-    #   start_period: 20s
-    #   timeout: 10s
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost || exit 1"]
+      interval: 20s
+      retries: 3
+      start_period: 60s
+      timeout: 10s
 
   mariadb:
     image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.6}
