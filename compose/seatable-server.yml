@@ -30,18 +30,19 @@ services:
       mariadb:
         condition: service_healthy
       memcached:
-        condition: service_started
+        condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     networks:
       - frontend-net
       - backend-seatable-net
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl --fail http://localhost || exit 1"]
-    #   interval: 20s
-    #   retries: 3
-    #   start_period: 20s
-    #   timeout: 10s
+    # healthcheck specifically for dtable-web
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
+      interval: 20s
+      retries: 3
+      start_period: 20s
+      timeout: 10s
 
   mariadb:
     image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.6}
@@ -50,8 +51,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - MYSQL_LOG_CONSOLE=true
-      - MARIADB_MYSQL_LOCALHOST_USER=1
-      - MARIADB_MYSQL_LOCALHOST_GRANTS=USAGE
       - MARIADB_AUTO_UPGRADE=1
     volumes:
       - "/opt/mariadb:/var/lib/mysql"
@@ -62,34 +61,58 @@ services:
         [
           "CMD",
           "/usr/local/bin/healthcheck.sh",
-          "--su-mysql",
           "--connect",
           "--mariadbupgrade",
           "--innodb_initialized",
         ]
-      interval: 10s
-      retries: 3
+      interval: 20s
       timeout: 5s
-  # to add the equivalent user in containers not initialized with MARIADB_MYSQL_LOCALHOST_USER=1:
+      retries: 3
+  # On older database containers without healthcheck users present you might need to create them manually.
+  # Check with:
+  # mysql -uroot -p -e "SELECT User, Host FROM mysql.user;"
   #
-  # CREATE USER 'mysql'@'localhost';
-  # GRANT USAGE ON *.* TO 'mysql'@'localhost';
-  # FLUSH PRIVILEGES;
+  # Create them with:
+  # CREATE USER 'healthcheck'@'127.0.0.1' IDENTIFIED BY '<password>';
+  # GRANT USAGE ON *.* TO 'healthcheck'@'127.0.0.1';
+  # CREATE USER 'healthcheck'@'::1' IDENTIFIED BY '<password>';
+  # GRANT USAGE ON *.* TO 'healthcheck'@'::1';
+  # CREATE USER 'healthcheck'@'localhost' IDENTIFIED BY '<password>';
+  # GRANT USAGE ON *.* TO 'healthcheck'@'localhost';
+  #
+  # create and set identical <password> in .healthcheck.cnf in / datadir of the container
+  # [mariadb-client]
+  # port=3306
+  # socket=/run/mysqld/mysqld.sock
+  # user=healthcheck
+  # password=<password>
+  # protocol=tcp
+
 
   memcached:
-    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.22-alpine}
+    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.22}
     restart: unless-stopped
     container_name: memcached
     entrypoint: memcached -m 256
     networks:
       - backend-seatable-net
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/11211'"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.3-alpine}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.3}
     restart: unless-stopped
     container_name: redis
     networks:
       - backend-seatable-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
 
 networks:
   frontend-net:
