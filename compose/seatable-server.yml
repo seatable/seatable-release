@@ -5,7 +5,7 @@ services:
   # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
   # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.3.0}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.3.6}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -52,6 +52,7 @@ services:
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_MYSQL_LOCALHOST_USER=1
       - MARIADB_MYSQL_LOCALHOST_GRANTS=USAGE
+      - MARIADB_AUTO_UPGRADE=1
     volumes:
       - "/opt/mariadb:/var/lib/mysql"
     networks:
@@ -63,11 +64,17 @@ services:
           "/usr/local/bin/healthcheck.sh",
           "--su-mysql",
           "--connect",
+          "--mariadbupgrade",
           "--innodb_initialized",
         ]
       interval: 10s
       retries: 3
       timeout: 5s
+  # to add the equivalent user in containers not started with MARIADB_MYSQL_LOCALHOST_USER=1:
+  #
+  # CREATE USER 'mysql'@'localhost';
+  # GRANT USAGE ON *.* TO 'mysql'@'localhost';
+  # FLUSH PRIVILEGES;
 
   memcached:
     image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.22-alpine}
