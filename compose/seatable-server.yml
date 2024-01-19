@@ -70,7 +70,7 @@ services:
       interval: 10s
       retries: 3
       timeout: 5s
-  # to add the equivalent user in containers not started with MARIADB_MYSQL_LOCALHOST_USER=1:
+  # to add the equivalent user in containers not initialized with MARIADB_MYSQL_LOCALHOST_USER=1:
   #
   # CREATE USER 'mysql'@'localhost';
   # GRANT USAGE ON *.* TO 'mysql'@'localhost';
