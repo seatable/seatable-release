@@ -22,6 +22,12 @@ services:
     labels:
       caddy: ${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.header.Strict-Transport-Security: "`max-age=31536000;`"
+      caddy.header.Referrer-Policy: "same-origin"
+      caddy.header.X-XSS-Protection: "`1; mode=block`"
+      caddy.header.X-Content-Type-Options: "nosniff"
+      caddy.header.X-Frame-Options: "SAMEORIGIN"
+      caddy.header.Content-Security-Policy: "`default-src 'none'; block-all-mixed-content; style-src 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'unsafe-eval' 'self'; script-src-elem 'unsafe-inline' 'self'; font-src 'self' data:; img-src 'self' data:; form-action 'self'; connect-src 'self'; frame-ancestors 'none'; worker-src 'self'; manifest-src 'self'; object-src 'self'; base-uri 'self'`"
     depends_on:
       mariadb:
         condition: service_healthy
