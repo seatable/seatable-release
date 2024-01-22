@@ -18,6 +18,12 @@ services:
       - "/opt/caddy:/data"
     networks:
       - frontend-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:2019/metrics || exit 1"]
+      start_period: 20s
+      interval: 20s
+      timeout: 5s
+      retries: 3
 
 networks:
   frontend-net:
