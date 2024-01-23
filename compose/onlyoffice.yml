@@ -5,7 +5,7 @@ services:
       - ${ONLYOFFICE_PORT:-6233}:${ONLYOFFICE_PORT:-6233}
 
   onlyoffice:
-    image: ${SEATABLE_ONLYOFFICE_IMAGE:-onlyoffice/documentserver:7.5.1.1}
+    image: ${ONLYOFFICE_IMAGE:-onlyoffice/documentserver:7.5.1.1}
     restart: unless-stopped
     container_name: onlyoffice
     environment:

@@ -6,7 +6,7 @@ services:
 
   zabbix-server:
     init: true
-    image: ${SEATABLE_ZABBIX_SERVER_IMAGE:-zabbix/zabbix-server-mysql:alpine-6.4.10}
+    image: ${ZABBIX_SERVER_IMAGE:-zabbix/zabbix-server-mysql:alpine-6.4.10}
     restart: unless-stopped
     container_name: zabbix-server
     ports:
@@ -39,7 +39,7 @@ services:
       - backend-seatable-net
 
   zabbix-web:
-    image: ${SEATABLE_ZABBIX_WEB_IMAGE:-zabbix/zabbix-web-nginx-mysql:alpine-6.4.10}
+    image: ${ZABBIX_WEB_IMAGE:-zabbix/zabbix-web-nginx-mysql:alpine-6.4.10}
     container_name: zabbix-web
     restart: unless-stopped
     volumes:
@@ -62,7 +62,7 @@ services:
       - backend-seatable-net
 
   zabbix-agent:
-    image: ${SEATABLE_ZABBIX_AGENT_IMAGE:-zabbix/zabbix-agent:alpine-6.4.10}
+    image: ${ZABBIX_AGENT_IMAGE:-zabbix/zabbix-agent:alpine-6.4.10}
     container_name: zabbix-agent
     restart: unless-stopped
     volumes:
