@@ -7,6 +7,7 @@ services:
 # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable:
     image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.2.11}
+    restart: unless-stopped
     container_name: seatable
     volumes:
       - "/opt/seatable-server:/shared"
@@ -36,6 +37,7 @@ services:
 
   seatable-db:
     image: ${SEATABLE_DB_IMAGE:-mariadb:10.11}
+    restart: unless-stopped
     container_name: seatable-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
@@ -54,6 +56,7 @@ services:
 
   memcached:
     image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.5.6}
+    restart: unless-stopped
     container_name: seatable-memcached
     entrypoint: memcached -m 256
     networks:
@@ -61,6 +64,7 @@ services:
 
   redis:
     image: ${SEATABLE_REDIS_IMAGE:-redis:5.0.7}
+    restart: unless-stopped
     container_name: seatable-redis
     networks:
       - backend-seatable-net

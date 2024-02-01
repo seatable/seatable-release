@@ -4,7 +4,7 @@ services:
 # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
 # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable-python-scheduler:
-    image: seatable/seatable-python-scheduler:3.0.1
+    image: seatable/seatable-python-scheduler:3.0.0
     container_name: seatable-python-scheduler
     environment:
       - DB_HOST=${PYTHON_SCHEDULER_MYSQL_HOST}

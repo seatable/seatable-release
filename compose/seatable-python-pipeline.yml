@@ -1,14 +1,15 @@
 ---
 services:
   seatable-python-scheduler:
-    image: ${SEATABLE_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.0.1}
+    image: ${SEATABLE_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.0.0}
+    restart: unless-stopped
     container_name: seatable-python-scheduler
     environment:
       - TIME_ZONE=${TIME_ZONE}
       - DB_HOST=${SEATABLE_MYSQL_HOST:-seatable-db}
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN}
-      - SEATABLE_SERVER_URL=${SEATABLE_SERVER_URL}
+      - SEATABLE_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME}
       - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://seatable-python-starter:8080}
       - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
       - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
@@ -27,12 +28,13 @@ services:
 
   seatable-python-starter:
     image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:3.0.1}
+    restart: unless-stopped
     container_name: seatable-python-starter
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
     environment:
-      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL}
+      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://seatable-python-scheduler}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
       - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.1}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
