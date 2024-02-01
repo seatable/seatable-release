@@ -1,7 +1,7 @@
 ---
 services:
   seatable-python-scheduler:
-    image: ${SEATABLE_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:4.2.9}
+    image: ${SEATABLE_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.0.1}
     container_name: seatable-python-scheduler
     environment:
       - TIME_ZONE=${TIME_ZONE}
@@ -26,7 +26,7 @@ services:
       timeout: 10s
 
   seatable-python-starter:
-    image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:4.2.9}
+    image: ${SEATABLE_STARTER_IMAGE:-seatable/seatable-python-starter:3.0.1}
     container_name: seatable-python-starter
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -34,13 +34,13 @@ services:
     environment:
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
-      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.9}
+      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.1}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
     networks:
       - backend-scheduler-net
 
   seatable-python-runner:
-    image: ${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.9}
+    image: ${SEATABLE_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.1}
     container_name: seatable-python-runner
     networks:
       - backend-scheduler-net

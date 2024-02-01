@@ -4,7 +4,7 @@ services:
 # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
 # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable-python-scheduler:
-    image: seatable/seatable-python-scheduler:dev
+    image: seatable/seatable-python-scheduler:3.0.1
     container_name: seatable-python-scheduler
     environment:
       - DB_HOST=${PYTHON_SCHEDULER_MYSQL_HOST}
@@ -31,7 +31,7 @@ services:
       timeout: 10s
 
   seatable-python-starter:
-    image: seatable/seatable-python-starter:dev
+    image: seatable/seatable-python-starter:3.0.1
     container_name: seatable-python-starter
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -39,13 +39,13 @@ services:
     environment:
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
-      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:dev}
+      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.1}
       - PYTHON_STARTER_LOG_LEVEL=DEBUG
     networks:
       - scheduler-net
 
   seatable-python-runner:
-    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:dev}
+    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.1}
     container_name: seatable-python-runner
     networks:
       - scheduler-net
