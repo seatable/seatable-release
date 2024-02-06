@@ -27,7 +27,23 @@ services:
       caddy.header.X-XSS-Protection: "`1; mode=block`"
       caddy.header.X-Content-Type-Options: "nosniff"
       caddy.header.X-Frame-Options: "SAMEORIGIN"
-      caddy.header.Content-Security-Policy: "`default-src 'none'; block-all-mixed-content; style-src 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'unsafe-eval' 'self'; script-src-elem 'unsafe-inline' 'self'; font-src 'self' data:; img-src 'self' data:; form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:6232; connect-src 'self'; frame-src 'self' ${SEATABLE_SERVER_HOSTNAME}:6232; frame-ancestors 'none'; worker-src 'self'; manifest-src 'self'; object-src 'self'; base-uri 'self'`"
+      caddy.header.Content-Security-Policy: "`
+        block-all-mixed-content;
+        default-src 'none';
+        style-src 'unsafe-inline' 'self';
+        script-src 'unsafe-inline' 'unsafe-eval' 'self';
+        script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:6233;
+        font-src 'self' data:;
+        img-src 'self' data:;
+        form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:6232;
+        connect-src 'self';
+        frame-src 'self' ${SEATABLE_SERVER_HOSTNAME}:6232 ${SEATABLE_SERVER_HOSTNAME}:6233;
+        frame-ancestors 'none';
+        worker-src 'self';
+        manifest-src 'self';
+        object-src 'self';
+        base-uri 'self'
+        `"
     depends_on:
       mariadb:
         condition: service_healthy
