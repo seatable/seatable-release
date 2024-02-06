@@ -69,7 +69,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
     environment:
       - ZBX_SERVER_HOST=zabbix-server
-      - ZBX_HOSTNAME='Zabbix server'
+      - ZBX_HOSTNAME=Zabbix server
       - ZBX_STARTAGENTS=1
       - ZBX_PASSIVE_ALLOW=true
       - ZBX_DEBUGLEVEL=3
