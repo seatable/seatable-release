@@ -1,7 +1,7 @@
 ---
 services:
   python-scheduler:
-    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:4.2.11}
+    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.0.4}
     restart: unless-stopped
     container_name: python-scheduler
     environment:
@@ -31,7 +31,7 @@ services:
       timeout: 10s
 
   python-starter:
-    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:4.2.11}
+    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:3.0.4}
     restart: unless-stopped
     container_name: python-starter
     volumes:
@@ -46,7 +46,7 @@ services:
       - backend-scheduler-net
 
   python-runner:
-    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.11}
+    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.4}
     restart: unless-stopped
     container_name: python-runner
     networks:

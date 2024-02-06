@@ -77,4 +77,3 @@ services:
     networks:
       - frontend-net
       - backend-seatable-net
-# fehlt noch die Zeitzone??
