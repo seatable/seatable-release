@@ -87,8 +87,10 @@ services:
       retries: 3
       start_period: 30s
       timeout: 10s
-      # On older database containers without healthcheck users present you might need to create them manually.
-      # Check with:
+      # On older database containers without healthcheck users present you might need to create them manually,
+      # otherwise the container stays unhealthy.
+      #
+      # You can check the existance of this healthcheck user with:
       # mysql -uroot -p -e "SELECT User, Host FROM mysql.user;"
       # If there is not healthcheck user present, you have to create it.
       #
@@ -100,7 +102,7 @@ services:
       # CREATE USER 'healthcheck'@'localhost' IDENTIFIED BY '<password>';
       # GRANT USAGE ON *.* TO 'healthcheck'@'localhost';
       #
-      # create and set identical <password> in .healthcheck.cnf in / datadir of the container
+      # Create a file .my-healthcheck.cnf in the mounted datadir of the container (typically /opt/mariadb/):
       # [mariadb-client]
       # port=3306
       # socket=/run/mysqld/mysqld.sock
