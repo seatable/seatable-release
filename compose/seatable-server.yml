@@ -22,6 +22,7 @@ services:
     labels:
       caddy: ${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
+      # Default security headers
       caddy.header.Strict-Transport-Security: "`max-age=31536000;`"
       caddy.header.Referrer-Policy: "same-origin"
       caddy.header.X-XSS-Protection: "`1; mode=block`"
@@ -32,11 +33,11 @@ services:
         default-src 'none';
         style-src 'unsafe-inline' 'self';
         script-src 'unsafe-inline' 'unsafe-eval' 'self';
-        script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
+        script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233} maps.googleapis.com;
         font-src 'self' data:;
-        img-src 'self' data:;
+        img-src 'self' data: mt0.google.com;
         form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
-        connect-src 'self' market.seatable.io;
+        connect-src 'self' market.seatable.io https:;
         frame-src 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232} ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
         frame-ancestors 'none';
         worker-src 'self' blob:;
@@ -44,6 +45,20 @@ services:
         object-src 'self';
         base-uri 'self'
         `"
+      # Allow iframes for some directories
+      caddy.route_0: /dtable/view-external-links/*
+      caddy.route_0.header.X-Frame-Options: "ALLOWALL"
+      caddy.route_0.header.-Content-Security-Policy: ""
+      caddy.route_1: /dtable/external-links/*
+      caddy.route_1.header.X-Frame-Options: "ALLOWALL"
+      caddy.route_1.header.-Content-Security-Policy: ""
+      caddy.route_2: /dtable/external-apps/*
+      caddy.route_2.header.X-Frame-Options: "ALLOWALL"
+      caddy.route_2.header.-Content-Security-Policy: ""
+      caddy.route_3: /dtable/forms/*
+      caddy.route_3.header.X-Frame-Options: "ALLOWALL"
+      caddy.route_3.header.-Content-Security-Policy: ""
+
     depends_on:
       mariadb:
         condition: service_healthy
