@@ -9,7 +9,7 @@ services:
       - type: bind
         source: "./seatable-license.txt"
         target: "/shared/seatable/seatable-license.txt"
-        read_only: true
+        read_only: ${SEATABLE_LICENSE_FORCE_READ_ONLY:-false}
     environment:
       - DB_HOST=mariadb
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
@@ -35,7 +35,7 @@ services:
         script-src 'unsafe-inline' 'unsafe-eval' 'self';
         script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233} maps.googleapis.com;
         font-src 'self' data:;
-        img-src 'self' data: mt0.google.com;
+        img-src 'self' data: mt0.google.com maps.googleapis.com maps.gstatic.com;
         form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
         connect-src 'self' market.seatable.io https:;
         frame-src 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232} ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
