@@ -39,7 +39,7 @@ services:
         form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
         connect-src 'self' market.seatable.io https:;
         frame-src 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232} ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
-        frame-ancestors 'none';
+        frame-ancestors 'self';
         worker-src 'self' blob:;
         manifest-src 'self';
         object-src 'self';
