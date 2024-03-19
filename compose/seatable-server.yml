@@ -35,7 +35,7 @@ services:
         script-src 'unsafe-inline' 'unsafe-eval' 'self';
         script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233} maps.googleapis.com;
         font-src 'self' data:;
-        img-src 'self' data: market.seatable.io mt0.google.com maps.googleapis.com maps.gstatic.com;
+        img-src 'self' data: blob: market.seatable.io mt0.google.com maps.googleapis.com maps.gstatic.com;
         form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
         connect-src 'self' market.seatable.io https:;
         frame-src 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232} ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
