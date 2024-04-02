@@ -1,9 +1,5 @@
 ---
 services:
-  # Seatable-Server
-  # Optional labels for lets encrypt staging or custom certificates
-  # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
-  # caddy.tls: "/data/certs/cert.pem /data/certs/key.pem"
   seatable-server:
     image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.4.4}
     restart: unless-stopped
@@ -29,6 +25,8 @@ services:
     labels:
       caddy: ${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
+      # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory ### Optional label for lets encrypt staging
+      # caddy.tls: "/data/certs/cert.pem /data/certs/key.pem" ### Optional label for custom certificates
     depends_on:
       mariadb:
         condition: service_healthy
