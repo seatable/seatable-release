@@ -27,8 +27,8 @@ services:
       caddy.reverse_proxy: "{{upstreams 80}}"
       # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory ### Optional label for lets encrypt staging
       # caddy.tls: "/data/certs/cert.pem /data/certs/key.pem" ### Optional label for custom certificates
-      
-      # Default security headers
+
+      ### Default security headers
       caddy.header.Strict-Transport-Security: "`max-age=31536000;`"
       caddy.header.Referrer-Policy: "same-origin"
       caddy.header.X-XSS-Protection: "`1; mode=block`"
@@ -51,7 +51,7 @@ services:
         object-src 'self';
         base-uri 'self'
         `"
-      # Allow iframes for some directories
+      ### Allow iframes for some directories
       caddy.route_0: /dtable/view-external-links/*
       caddy.route_0.header.X-Frame-Options: "ALLOWALL"
       caddy.route_0.header.-Content-Security-Policy: ""
@@ -75,7 +75,7 @@ services:
     networks:
       - frontend-net
       - backend-seatable-net
-    # dtable-web specific healthcheck
+    ### dtable-web specific healthcheck
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
       interval: 20s
@@ -109,8 +109,8 @@ services:
       timeout: 5s
       retries: 3
 
-  # On older database containers without healthcheck users present you might need to create them manually.
-  # Check with:
+  ### On older database containers without healthcheck users present you might need to create them manually.
+  # Check if the users exist with:
   # mysql -uroot -p -e "SELECT User, Host FROM mysql.user;"
   #
   # Create them with:

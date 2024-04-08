@@ -3,6 +3,15 @@ This repository contains a docker compose project to deploy SeaTable Server and 
 
 Releases will be referenced in the [SeaTable Admin Manual](https://admin.seatable.io/). Distribution Method will be git clone or wget | tar download of a release.
 
+### Installing from main branch
+This is not reccomended for production use. The main branch is the development branch and can contain untested or broken code.
+```bash
+mkdir -p /opt/seatable-compose && cd /opt/seatable-compose && \
+git clone https://github.com/seatable/seatable-release.git && \
+mv seatable-release/compose/* seatable-release/compose/.* -t . && rm -r seatable-release/ && \
+cp -n .env-release .env
+```
+
 ### Releases
 The releases are named after the SeaTable version they are based on.
 The tag `latest` will always point to the latest release.
