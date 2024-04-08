@@ -1,7 +1,7 @@
 ---
 services:
   python-scheduler:
-    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.0.4}
+    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.0.5}
     restart: unless-stopped
     container_name: python-scheduler
     environment:
@@ -13,6 +13,9 @@ services:
       - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://python-starter:8080}
       - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
       - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+    # volumes:
+      # - "/opt/caddy/certs/cert.pem:/usr/local/share/ca-certificates/cert.crt" ### neccesary for self-signed certificates / .crt in PEM Format
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -31,22 +34,24 @@ services:
       timeout: 10s
 
   python-starter:
-    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:3.0.4}
+    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:3.0.5}
     restart: unless-stopped
     container_name: python-starter
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      # - "/opt/caddy/certs/cert.pem:/usr/local/share/ca-certificates/cert.crt" ### neccesary for self-signed certificates / .crt in PEM Format
     environment:
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
-      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.4}
+      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.5}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
     networks:
       - backend-scheduler-net
 
   python-runner:
-    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.4}
+    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.0.5}
     restart: unless-stopped
     container_name: python-runner
     networks:
