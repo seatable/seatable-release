@@ -1,0 +1,10 @@
+{
+    "overrides": [
+      {
+        "files": ".env-release",
+        "options": {
+          "parser": "flow"
+        }
+      }
+    ]
+  }

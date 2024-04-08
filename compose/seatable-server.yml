@@ -9,7 +9,7 @@ services:
       - type: bind
         source: "./seatable-license.txt"
         target: "/shared/seatable/seatable-license.txt"
-        read_only: true
+        read_only: ${SEATABLE_LICENSE_FORCE_READ_ONLY:-false}
       # - "/opt/caddy/certs/cert.pem:/usr/local/share/ca-certificates/cert.crt" ### neccesary for self-signed certificates / .crt in PEM Format
     # command: /bin/bash -c "update-ca-certificates && exec /sbin/my_init -- /templates/enterpoint.sh" ### neccesary for self-signed certificates
     environment:
@@ -23,10 +23,48 @@ services:
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
       # - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN}  ### not yet suppported
     labels:
-      caddy: ${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
+      caddy: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
       # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory ### Optional label for lets encrypt staging
       # caddy.tls: "/data/certs/cert.pem /data/certs/key.pem" ### Optional label for custom certificates
+      
+      # Default security headers
+      caddy.header.Strict-Transport-Security: "`max-age=31536000;`"
+      caddy.header.Referrer-Policy: "same-origin"
+      caddy.header.X-XSS-Protection: "`1; mode=block`"
+      caddy.header.X-Content-Type-Options: "nosniff"
+      caddy.header.X-Frame-Options: "SAMEORIGIN"
+      caddy.header.Content-Security-Policy: "`
+        block-all-mixed-content;
+        default-src 'none';
+        style-src 'unsafe-inline' 'self';
+        script-src 'unsafe-inline' 'unsafe-eval' 'self';
+        script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233} maps.googleapis.com;
+        font-src 'self' data:;
+        img-src 'self' data: blob: market.seatable.io mt0.google.com maps.googleapis.com maps.gstatic.com;
+        form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
+        connect-src 'self' market.seatable.io https:;
+        frame-src 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232} ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
+        frame-ancestors 'self';
+        worker-src 'self' blob:;
+        manifest-src 'self';
+        object-src 'self';
+        base-uri 'self'
+        `"
+      # Allow iframes for some directories
+      caddy.route_0: /dtable/view-external-links/*
+      caddy.route_0.header.X-Frame-Options: "ALLOWALL"
+      caddy.route_0.header.-Content-Security-Policy: ""
+      caddy.route_1: /dtable/external-links/*
+      caddy.route_1.header.X-Frame-Options: "ALLOWALL"
+      caddy.route_1.header.-Content-Security-Policy: ""
+      caddy.route_2: /dtable/external-apps/*
+      caddy.route_2.header.X-Frame-Options: "ALLOWALL"
+      caddy.route_2.header.-Content-Security-Policy: ""
+      caddy.route_3: /dtable/forms/*
+      caddy.route_3.header.X-Frame-Options: "ALLOWALL"
+      caddy.route_3.header.-Content-Security-Policy: ""
+
     depends_on:
       mariadb:
         condition: service_healthy
@@ -67,8 +105,10 @@ services:
           "--innodb_initialized",
         ]
       interval: 20s
+      start_period: 30s
       timeout: 5s
       retries: 3
+
   # On older database containers without healthcheck users present you might need to create them manually.
   # Check with:
   # mysql -uroot -p -e "SELECT User, Host FROM mysql.user;"

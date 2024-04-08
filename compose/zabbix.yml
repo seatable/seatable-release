@@ -1,0 +1,79 @@
+---
+services:
+  caddy:
+    ports:
+      - ${ZABBIX_PORT:-6235}:${ZABBIX_PORT:-6235}
+
+  zabbix-server:
+    init: true
+    image: ${ZABBIX_SERVER_IMAGE:-zabbix/zabbix-server-mysql:alpine-6.4.10}
+    restart: unless-stopped
+    container_name: zabbix-server
+    ports:
+      - 10051:10051
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_DIRECTORY:-/opt/zabbix}/alertscripts:/usr/lib/zabbix/alertscripts:ro
+      - ${DATA_DIRECTORY:-/opt/zabbix}/externalscripts:/usr/lib/zabbix/externalscripts:ro
+      - ${DATA_DIRECTORY:-/opt/zabbix}/dbscripts:/var/lib/zabbix/dbscripts:ro
+      - ${DATA_DIRECTORY:-/opt/zabbix}/export:/var/lib/zabbix/export:rw
+      - ${DATA_DIRECTORY:-/opt/zabbix}/modules:/var/lib/zabbix/modules:ro
+      - ${DATA_DIRECTORY:-/opt/zabbix}/enc:/var/lib/zabbix/enc:ro
+      - ${DATA_DIRECTORY:-/opt/zabbix}/ssh_keys:/var/lib/zabbix/ssh_keys:ro
+      - ${DATA_DIRECTORY:-/opt/zabbix}/mibs:/var/lib/zabbix/mibs:ro
+    environment:
+      - DB_SERVER_HOST=mariadb
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_DATABASE=zabbix
+      - ZBX_DEBUGLEVEL=3
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 64999
+      - net.ipv4.conf.all.accept_redirects=0
+      - net.ipv4.conf.all.secure_redirects=0
+      - net.ipv4.conf.all.send_redirects=0
+    depends_on:
+      - mariadb
+    networks:
+      - frontend-net
+      - backend-seatable-net
+
+  zabbix-web:
+    image: ${ZABBIX_WEB_IMAGE:-zabbix/zabbix-web-nginx-mysql:alpine-6.4.10}
+    container_name: zabbix-web
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_DIRECTORY:-/opt/zabbix}/web_modules/:/usr/share/zabbix/modules/:ro
+    environment:
+      - ZBX_SERVER_HOST=zabbix-server
+      - DB_SERVER_HOST=mariadb
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_DATABASE=zabbix
+      - PHP_TZ=${TIME_ZONE}
+    labels:
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:${ZABBIX_PORT:-6235}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    depends_on:
+      - zabbix-server
+    networks:
+      - frontend-net
+      - backend-seatable-net
+
+  zabbix-agent:
+    image: ${ZABBIX_AGENT_IMAGE:-zabbix/zabbix-agent:alpine-6.4.10}
+    container_name: zabbix-agent
+    restart: unless-stopped
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      - ZBX_SERVER_HOST=zabbix-server
+      - ZBX_HOSTNAME=Zabbix server
+      - ZBX_STARTAGENTS=1
+      - ZBX_PASSIVE_ALLOW=true
+      - ZBX_DEBUGLEVEL=3
+    privileged: true
+    networks:
+      - frontend-net
+      - backend-seatable-net
