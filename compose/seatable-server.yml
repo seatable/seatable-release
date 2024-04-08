@@ -1,11 +1,7 @@
 ---
 services:
-  # Seatable-Server
-  # Optional labels for lets encrypt staging or custom certificates
-  # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
-  # caddy.tls: "/data/certs/server-public-cert.pem /data/certs/server-private-key.pem"
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.3.6}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.4.4}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -14,6 +10,8 @@ services:
         source: "./seatable-license.txt"
         target: "/shared/seatable/seatable-license.txt"
         read_only: true
+      # - "/opt/caddy/certs/cert.pem:/usr/local/share/ca-certificates/cert.crt" ### neccesary for self-signed certificates / .crt in PEM Format
+    # command: /bin/bash -c "update-ca-certificates && exec /sbin/my_init -- /templates/enterpoint.sh" ### neccesary for self-signed certificates
     environment:
       - DB_HOST=mariadb
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
@@ -22,10 +20,13 @@ services:
       - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}
       - SEATABLE_ADMIN_PASSWORD=${SEATABLE_ADMIN_PASSWORD:?Variable is not set or empty}
       - TIME_ZONE=${TIME_ZONE}
-      # - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN}  -- not yet suppported
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      # - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN}  ### not yet suppported
     labels:
       caddy: ${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
+      # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory ### Optional label for lets encrypt staging
+      # caddy.tls: "/data/certs/cert.pem /data/certs/key.pem" ### Optional label for custom certificates
     depends_on:
       mariadb:
         condition: service_healthy
@@ -36,7 +37,7 @@ services:
     networks:
       - frontend-net
       - backend-seatable-net
-    # healthcheck specifically for dtable-web
+    # dtable-web specific healthcheck
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
       interval: 20s
@@ -45,7 +46,7 @@ services:
       timeout: 10s
 
   mariadb:
-    image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.6}
+    image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.7-jammy@sha256:3e20b48362476fb535da8b001cfa4d007fe9db0cac915b048711264427627fb8}
     restart: unless-stopped
     container_name: mariadb
     environment:
@@ -90,7 +91,7 @@ services:
 
 
   memcached:
-    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.22}
+    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.26-bookworm@sha256:43c37feca729005b74e7f54ef8bb334d7ffcac750f16be1874ccbad1aab2441c}
     restart: unless-stopped
     container_name: memcached
     entrypoint: memcached -m 256
@@ -103,7 +104,7 @@ services:
       retries: 3
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.3}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.4-bookworm@sha256:3134997edb04277814aa51a4175a588d45eb4299272f8eff2307bbf8b39e4d43}
     restart: unless-stopped
     container_name: redis
     networks:
