@@ -51,4 +51,3 @@ jobs:
           tag_name: ${{ needs.init-vars.outputs.version }}
           files: |
             seatable-compose.tar.gz
-          prerelease: true

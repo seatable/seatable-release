@@ -28,7 +28,7 @@ git tag release-v*.*.*
 git push origin release-v*.*.*
 ```
 ### Reference Releases
-The `latest` tag will always point to the latest release.
+The `latest` tag will always point to the latest release (icluding the lates Pre-Release).
 To download the latest tarball you can use this url:
 [https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz](https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz)\
 \
