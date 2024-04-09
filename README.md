@@ -8,7 +8,7 @@ Releases are named after the SeaTable version they're based on. The `latest` tag
 ### Preparing a New Release
 
 1. Checkout a commit from the main branch.
-2. Create a tag on the commit in the format `release-v*.*.*` and push the tag to origin.
+2. Create a tag on the commit in the format `release-v*.*.*` or `prerelease-v*.*.*` and push the tag to origin.
 3. All files in the 'compose/' directory will be uploaded to the release as a tarball (`seatable-compose.tar.gz`), and the release will be tagged with the version number from the git tag.
 
 ```bash
@@ -17,7 +17,7 @@ git push origin release-v*.*.*
 ```
 ### Reference Releases
 
-The `latest` tag will always point to the most recent release (including the latest Pre-Release).
+These `latest` url will always point to the most recent release (including the latest Pre-Release).
 To download the latest tarball you can use this url:
 [https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz](https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz)\
 \
