@@ -17,8 +17,12 @@ git push origin release-v*.*.*
 ```
 ### Reference Releases
 
-These `latest` url will always point to the most recent release (including the latest Pre-Release).
-To download the latest tarball you can use this url:
+This `latest`api call will deliver the ***latest full non-prerelease, non-draft release release.*** This is the recommended method to get the latest stable, tested release.
+```bash
+curl -s https://api.github.com/repos/seatable/seatable-release/releases/latest | jq -r '.assets[0].browser_download_url'
+```
+
+This `latest` url will always point to the most recent release or prerelease.
 [https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz](https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz)\
 \
 To download a specific release you can use these types of urls (example):\
