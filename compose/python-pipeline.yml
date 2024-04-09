@@ -34,7 +34,7 @@ services:
       timeout: 10s
 
   python-starter:
-    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:3.0.5}
+    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:3.0.6}
     restart: unless-stopped
     container_name: python-starter
     volumes:
