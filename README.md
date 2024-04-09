@@ -12,6 +12,9 @@ Releases are named after the SeaTable version they're based on. The `latest` tag
 3. All files in the 'compose/' directory will be uploaded to the release as a tarball (`seatable-compose.tar.gz`), and the release will be tagged with the version number from the git tag.
 
 ```bash
+git tag prerelease-v*.*.*
+git push origin prerelease-v*.*.*
+###
 git tag release-v*.*.*
 git push origin release-v*.*.*
 ```
