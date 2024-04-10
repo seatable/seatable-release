@@ -17,15 +17,20 @@ git push origin v*.*.*
 ```
 ### Reference Releases
 
-This `latest` url and api call will point to the ***latest full, non-prerelease, non-draft release release.***
-These are the methods to get the latest stable, tested SeaTable release.
+This `latest` url and api call will point to the ***latest full, non-prerelease, non-draft release release.***\
+These are the reccommended methods to get the latest stable, tested SeaTable release.\
+\
+**https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz**
+
 ```bash
-curl -s https://api.github.com/repos/seatable/seatable-release/releases/latest | jq -r '.assets[0].browser_download_url'
+curl -s https://api.github.com/repos/seatable/seatable-release/releases/latest | \
+jq -r '.assets[0].browser_download_url'
 ```
-https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz
+
 ---
-To download a specific release you can use these types of urls (example):\
-https://github.com/seatable/seatable-release/releases/download/v4.3.10/seatable-compose.tar.gz
+
+#### Download a specific Release (examples)
+https://github.com/seatable/seatable-release/releases/download/v4.3.10/seatable-compose.tar.gz\
 https://github.com/seatable/seatable-release/releases/download/pre-v4.4.4/seatable-compose.tar.gz
 
 #### Development/Test Installation from Main Branch
