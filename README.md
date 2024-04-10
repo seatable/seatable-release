@@ -1,5 +1,7 @@
 ## SeaTable Docker Compose Releases
-This repository contains a docker compose project to deploy SeaTable Server and addtional services like the Python Pipeline or Only Office. Releases are be referenced in the [SeaTable Admin Manual](https://admin.seatable.io/). Distribution Method is a release tar download from github.
+This repository contains a docker compose project to deploy SeaTable Server and additional services like the Python Pipeline or Only Office. These releases are being referenced in the [SeaTable Admin Manual](https://admin.seatable.io/). Distribution Method is a release tar download from GitHub.
+
+It is recommended to use the Admin Manual for installation.
 
 ### Releases
 
@@ -17,8 +19,8 @@ git push origin v*.*.*
 ```
 ### Reference Releases
 
-This `latest` url and api call will point to the ***latest full, non-prerelease, non-draft release release.***\
-These are the reccommended methods to get the latest stable, tested SeaTable release.\
+This `latest` URL and API call will point to the ***latest full, non-pre, non-draft release.***\
+These are the recommended methods to get the latest stable, tested SeaTable release.\
 \
 **https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz**
 
@@ -34,7 +36,7 @@ https://github.com/seatable/seatable-release/releases/download/v4.3.10/seatable-
 https://github.com/seatable/seatable-release/releases/download/pre-v4.4.4/seatable-compose.tar.gz
 
 #### Development/Test Installation from Main Branch
-This method is not recommended for production use as the main branch is for development and may contain untested or broken code.
+This method is not recommended for production use, as the main branch is for development and may contain untested or broken code.
 ```bash
 mkdir -p /opt/seatable-compose && cd /opt/seatable-compose && \
 git clone https://github.com/seatable/seatable-release.git && \
