@@ -20,7 +20,7 @@ services:
       - TIME_ZONE=${TIME_ZONE}
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-}
-      - REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
       - SEATABLE_EMAIL_USE_TLS=${SEATABLE_EMAIL_USE_TLS:-}
       - SEATABLE_EMAIL_HOST=${SEATABLE_EMAIL_HOST:-}
       - SEATABLE_EMAIL_HOST_USER=${SEATABLE_EMAIL_HOST_USER:-}
