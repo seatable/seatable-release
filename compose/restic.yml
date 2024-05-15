@@ -1,0 +1,24 @@
+---
+services:
+  restic-backup:
+    image: ${SEATABLE_RESTIC_BACKUP_IMAGE:-seatable/restic-backup:1.2.5}
+    container_name: restic-backup
+    restart: unless-stopped
+    init: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/seatable-compose:/data/seatable-compose:ro
+      - /opt/seatable-server/seatable:/data/seatable-server/seatable:ro
+      - /opt/restic/local:/local
+      - /opt/restic/restore:/restore
+      - /opt/restic/cache:/root/.cache/restic
+      - /opt/restic/logs:/var/log/
+    environment:
+      - TZ=${TIME_ZONE}
+      - RESTIC_REPOSITORY=${RESTIC_REPOSITORY:-/local}
+      - RESTIC_PASSWORD=${RESTIC_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_DATABASE_DUMP=${SEATABLE_DATABASE_DUMP:-true}
+      - SEATABLE_DATABASE_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_BIGDATA_DUMP=${SEATABLE_BIGDATA_DUMP:-true}
+      - LOG_TYPE=${LOG_TYPE:=stdout}
+      - LOG_LEVEL=${LOG_LEVEL:=INFO}

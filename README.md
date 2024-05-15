@@ -1,41 +1,45 @@
 ## SeaTable Docker Compose Releases
-This repository contains a docker compose project to deploy SeaTable Server and addtional services like the Python Pipeline or Only Office.
+This repository contains a docker compose project to deploy SeaTable Server and additional services like the Python Pipeline or Only Office. These releases are being referenced in the [SeaTable Admin Manual](https://admin.seatable.io/). Distribution Method is a release tar download from GitHub.
 
-Releases will be referenced in the [SeaTable Admin Manual](https://admin.seatable.io/). Distribution Method will be git clone or wget | tar download of a release.
+It is recommended to use the Admin Manual for installation.
 
 ### Releases
-The releases are named after the SeaTable version they are based on.
-The tag `latest` will always point to the latest release.
 
-### Usage
-- Develop on "wip/" branches, merge back into main
-#### To prepare a new release:
-- Clone this repository & Checkout a new branch with the Naming Convention `release-v*.*.*` (e.g. `release-v4.1.9`)
-- Use compose-var.py to check variables in the compose/.yml files
-- Make changes, commit and push your changes -> a release is being created
-- Bugfixes needing other SeaTable image versions get their own new relase branch
-- Bugfixes concerning only the deployment can be done in the correspondign release branch
-- All files in the 'compose/' directory will be uploaded to the release as the tarbal <seatbale-compose.tar.gz> and the release will be tagged with the branchname / version
+Releases are named after the SeaTable version they're based on. The `latest` tag always points to the most recent release, including pre-releases.)
+
+### Preparing a New Release
+
+1. Checkout a commit from the main branch.
+2. Create a lightweight tag on the commit in the format `v*.*.*` (full release) or `pre-v*.*.*` (pre-release) and push the tag to origin.
+3. All files in the 'compose/' directory will be uploaded to the release as a tarball (`seatable-compose.tar.gz`), and the release will be tagged with the version number from the git tag.
 
 ```bash
-git clone <this_repo>
-cd <this_repos_directory>
-git checkout -b <new_branch> #e.g. release-v4.1.9
-```
-```bash
-# print all ${} or only IMAGE variables in the release/.yml files
-python compose-var.py
-python compose-var.py -image
-```
-```bash
-git add <relevant_changes>
-git commit -m "<commit_message>"
-git push
+git tag v*.*.*
+git push origin v*.*.*
 ```
 ### Reference Releases
-The `latest` tag will always point to the latest release.
-To download the latest tarball you can use this url:
-[https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz](https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz)\
+
+This `latest` URL and API call will point to the ***latest full, non-pre, non-draft release.***\
+These are the recommended methods to get the latest stable, tested SeaTable release.\
 \
-To download a specific release you can use these types of urls (example):\
-[https://github.com/seatable/seatable-release/releases/download/v4.1.9/seatable-compose.tar.gz](https://github.com/seatable/seatable-release/releases/download/v4.1.9/seatable-compose.tar.gz)
+**https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz**
+
+```bash
+curl -s https://api.github.com/repos/seatable/seatable-release/releases/latest | \
+jq -r '.assets[0].browser_download_url'
+```
+
+---
+
+#### Download a specific Release (examples)
+https://github.com/seatable/seatable-release/releases/download/v4.3.10/seatable-compose.tar.gz\
+https://github.com/seatable/seatable-release/releases/download/pre-v4.4.4/seatable-compose.tar.gz
+
+#### Development/Test Installation from Main Branch
+This method is not recommended for production use, as the main branch is for development and may contain untested or broken code.
+```bash
+mkdir -p /opt/seatable-compose && cd /opt/seatable-compose && \
+git clone https://github.com/seatable/seatable-release.git && \
+mv seatable-release/compose/* seatable-release/compose/.* -t . && rm -r seatable-release/ && \
+cp -n .env-release .env
+```
