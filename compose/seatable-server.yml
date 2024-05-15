@@ -18,8 +18,9 @@ services:
       - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}
       - SEATABLE_ADMIN_PASSWORD=${SEATABLE_ADMIN_PASSWORD:?Variable is not set or empty}
       - TIME_ZONE=${TIME_ZONE}
-      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-      # - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN}  ### not yet suppported
+      #- REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
+      - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-no_warning_define_in_env}
     labels:
       caddy: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
