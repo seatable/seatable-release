@@ -4,7 +4,7 @@ services:
   # Handles TLS termination using either Let's Encrypt or custom certificates
   # The path :/data/ is used for acme, and :/data/certs/ is used for custom certificates
   caddy:
-    image: ${IMAGE_CADDY:-lucaslorentz/caddy-docker-proxy:2.8.11@sha256:0502dc33e4c1254780454c8716c7024e2e01c3f54058f248a7fa32d25a49fcd6}
+    image: ${IMAGE_CADDY:-lucaslorentz/caddy-docker-proxy:2.8.11}
     restart: unless-stopped
     container_name: caddy
     ports:
