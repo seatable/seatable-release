@@ -13,7 +13,7 @@ services:
       - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://python-starter:8080}
       - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
       - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
-      - REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -43,7 +43,7 @@ services:
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
       - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.1.0}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
-      - REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
     networks:
       - backend-scheduler-net
 
