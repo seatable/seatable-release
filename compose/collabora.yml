@@ -12,7 +12,7 @@ services:
     cap_add:
       - MKNOD
     environment:
-      # - "aliasgroup1=" # comma separated list of domais, allowed to use collabora online. e.g. https://cloud.seatable.io
+      #- "aliasgroup1=" # comma separated list of domais, allowed to use collabora online. e.g. https://cloud.seatable.io
       - "server_name=${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}"
       - "username=${COLLABORA_ADMIN:-admin}"
       - "password=${COLLABORA_PW:-disabled_by_default}"
@@ -25,8 +25,8 @@ services:
         --o:remote_font_config.url=${COLLABORA_REMOTE_FONT:-}
         --o:logging.file[@enable]=${COLLABORA_ENABLE_FILE_LOGGING:-false}
         --o:logging.file.property[0]=/opt/cool/logs/coolwsd.log
-    # volumes:
-    #   - "${COLLABORA_PATH:-/opt/collabora}/logs:/opt/cool/logs/" # chmod 777 needed
+    #volumes:
+    #  - "${COLLABORA_PATH:-/opt/collabora}/logs:/opt/cool/logs/" # chmod 777 needed
     labels:
       caddy: ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}
       caddy.reverse_proxy: "{{upstreams 9980}}"

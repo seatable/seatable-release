@@ -14,7 +14,7 @@ services:
       - CADDY_INGRESS_NETWORKS=frontend-net
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/opt/caddy:/data"
+      - "/opt/caddy:/data/caddy"
     networks:
       - frontend-net
     healthcheck:

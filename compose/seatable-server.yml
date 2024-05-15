@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise-testing:4.4.4}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.4.9}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -10,8 +10,6 @@ services:
         source: "./seatable-license.txt"
         target: "/shared/seatable/seatable-license.txt"
         read_only: ${SEATABLE_LICENSE_FORCE_READ_ONLY:-false}
-      # - "/opt/caddy/certs/cert.pem:/usr/local/share/ca-certificates/cert.crt" ### neccesary for self-signed certificates / .crt in PEM Format
-    # command: /bin/bash -c "update-ca-certificates && exec /sbin/my_init -- /templates/enterpoint.sh" ### neccesary for self-signed certificates
     environment:
       - DB_HOST=mariadb
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
@@ -25,10 +23,7 @@ services:
     labels:
       caddy: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
-      # caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory ### Optional label for lets encrypt staging
-      # caddy.tls: "/data/certs/cert.pem /data/certs/key.pem" ### Optional label for custom certificates
-
-      ### Default security headers
+      # Default security headers
       caddy.header.Strict-Transport-Security: "`max-age=31536000;`"
       caddy.header.Referrer-Policy: "same-origin"
       caddy.header.X-XSS-Protection: "`1; mode=block`"
@@ -51,7 +46,7 @@ services:
         object-src 'self';
         base-uri 'self'
         `"
-      ### Allow iframes for some directories
+      # Allow iframes for some directories
       caddy.route_0: /dtable/view-external-links/*
       caddy.route_0.header.X-Frame-Options: "ALLOWALL"
       caddy.route_0.header.-Content-Security-Policy: ""
@@ -75,12 +70,12 @@ services:
     networks:
       - frontend-net
       - backend-seatable-net
-    ### dtable-web specific healthcheck
+    # healthcheck specifically for dtable-web
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
       interval: 20s
       retries: 3
-      start_period: 20s
+      start_period: 30s
       timeout: 10s
 
   mariadb:
@@ -105,30 +100,31 @@ services:
           "--innodb_initialized",
         ]
       interval: 20s
-      start_period: 30s
-      timeout: 5s
       retries: 3
-
-  ### On older database containers without healthcheck users present you might need to create them manually.
-  # Check if the users exist with:
-  # mysql -uroot -p -e "SELECT User, Host FROM mysql.user;"
-  #
-  # Create them with:
-  # CREATE USER 'healthcheck'@'127.0.0.1' IDENTIFIED BY '<password>';
-  # GRANT USAGE ON *.* TO 'healthcheck'@'127.0.0.1';
-  # CREATE USER 'healthcheck'@'::1' IDENTIFIED BY '<password>';
-  # GRANT USAGE ON *.* TO 'healthcheck'@'::1';
-  # CREATE USER 'healthcheck'@'localhost' IDENTIFIED BY '<password>';
-  # GRANT USAGE ON *.* TO 'healthcheck'@'localhost';
-  #
-  # create and set identical <password> in .healthcheck.cnf in / datadir of the container
-  # [mariadb-client]
-  # port=3306
-  # socket=/run/mysqld/mysqld.sock
-  # user=healthcheck
-  # password=<password>
-  # protocol=tcp
-
+      start_period: 30s
+      timeout: 10s
+      # On older database containers without healthcheck users present you might need to create them manually,
+      # otherwise the container stays unhealthy.
+      #
+      # You can check the existance of this healthcheck user with:
+      # mysql -uroot -p -e "SELECT User, Host FROM mysql.user;"
+      # If there is not healthcheck user present, you have to create it.
+      #
+      # Create them with:
+      # CREATE USER 'healthcheck'@'127.0.0.1' IDENTIFIED BY '<password>';
+      # GRANT USAGE ON *.* TO 'healthcheck'@'127.0.0.1';
+      # CREATE USER 'healthcheck'@'::1' IDENTIFIED BY '<password>';
+      # GRANT USAGE ON *.* TO 'healthcheck'@'::1';
+      # CREATE USER 'healthcheck'@'localhost' IDENTIFIED BY '<password>';
+      # GRANT USAGE ON *.* TO 'healthcheck'@'localhost';
+      #
+      # Create a file .my-healthcheck.cnf in the mounted datadir of the container (typically /opt/mariadb/):
+      # [mariadb-client]
+      # port=3306
+      # socket=/run/mysqld/mysqld.sock
+      # user=healthcheck
+      # password=<password>
+      # protocol=tcp
 
   memcached:
     image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.26-bookworm@sha256:43c37feca729005b74e7f54ef8bb334d7ffcac750f16be1874ccbad1aab2441c}
@@ -140,8 +136,8 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/11211'"]
       interval: 20s
-      timeout: 5s
       retries: 3
+      timeout: 5s
 
   redis:
     image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.4-bookworm@sha256:3134997edb04277814aa51a4175a588d45eb4299272f8eff2307bbf8b39e4d43}
@@ -152,8 +148,8 @@ services:
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 20s
-      timeout: 5s
       retries: 3
+      timeout: 5s
 
 networks:
   frontend-net:
