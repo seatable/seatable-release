@@ -119,26 +119,7 @@ services:
       timeout: 10s
       # On older database containers without healthcheck users present you might need to create them manually,
       # otherwise the container stays unhealthy.
-      #
-      # You can check the existance of this healthcheck user with:
-      # mysql -uroot -p -e "SELECT User, Host FROM mysql.user;"
-      # If there is not healthcheck user present, you have to create it.
-      #
-      # Create them with:
-      # CREATE USER 'healthcheck'@'127.0.0.1' IDENTIFIED BY '<password>';
-      # GRANT USAGE ON *.* TO 'healthcheck'@'127.0.0.1';
-      # CREATE USER 'healthcheck'@'::1' IDENTIFIED BY '<password>';
-      # GRANT USAGE ON *.* TO 'healthcheck'@'::1';
-      # CREATE USER 'healthcheck'@'localhost' IDENTIFIED BY '<password>';
-      # GRANT USAGE ON *.* TO 'healthcheck'@'localhost';
-      #
-      # Create a file .my-healthcheck.cnf in the mounted datadir of the container (typically /opt/mariadb/):
-      # [mariadb-client]
-      # port=3306
-      # socket=/run/mysqld/mysqld.sock
-      # user=healthcheck
-      # password=<password>
-      # protocol=tcp
+      # more info at https://admin.seatable.io/upgrade/extra-upgrade-notice/
 
   memcached:
     image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.27-bookworm}
