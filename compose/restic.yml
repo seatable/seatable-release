@@ -20,5 +20,5 @@ services:
       - SEATABLE_DATABASE_DUMP=${SEATABLE_DATABASE_DUMP:-true}
       - SEATABLE_DATABASE_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - SEATABLE_BIGDATA_DUMP=${SEATABLE_BIGDATA_DUMP:-true}
-      - LOG_TYPE=${LOG_TYPE:=stdout}
-      - LOG_LEVEL=${LOG_LEVEL:=INFO}
+      - LOG_TYPE=${LOG_TYPE:-stdout}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
