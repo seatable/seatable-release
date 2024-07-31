@@ -1,0 +1,87 @@
+---
+services:
+  mariadb:
+    image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.7-jammy}
+    restart: unless-stopped
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_LOG_CONSOLE=true
+      - MARIADB_AUTO_UPGRADE=1
+    volumes:
+      - "/opt/mariadb:/var/lib/mysql"
+    networks:
+      - backend-scheduler-net
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "/usr/local/bin/healthcheck.sh",
+          "--connect",
+          "--mariadbupgrade",
+          "--innodb_initialized",
+        ]
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
+  python-scheduler:
+    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.1.0}
+    restart: unless-stopped
+    container_name: python-scheduler
+    environment:
+      - TIME_ZONE=${TIME_ZONE}
+      - DB_HOST=${SEATABLE_MYSQL_HOST:-mariadb}
+      - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:?Variable is not set or empty}
+      - SEATABLE_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME}
+      - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://python-starter:8080}
+      - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
+      - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+    labels:
+      caddy: ${PYTHON_SCHEDULER_PROTOCOL:-https}://${PYTHON_SCHEDULER_HOSTNAME:?Variable is not set or empty}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+    networks:
+      - frontend-net
+      - backend-scheduler-net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pgrep -f 'python3 scheduler.py' && pgrep -f 'python3 flask_server.py'",
+        ]
+      interval: 20s
+      retries: 3
+      start_period: 20s
+      timeout: 10s
+
+  python-starter:
+    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:3.1.1}
+    restart: unless-stopped
+    container_name: python-starter
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
+    environment:
+      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
+      - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
+      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.1.2}
+      - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+    networks:
+      - backend-scheduler-net
+
+  python-runner:
+    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:3.1.2}
+    restart: unless-stopped
+    container_name: python-runner
+    networks:
+      - backend-scheduler-net
+
+networks:
+  frontend-net:
+    name: frontend-net
+  backend-scheduler-net:
+    name: backend-scheduler-net
