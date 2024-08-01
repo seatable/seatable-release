@@ -12,7 +12,7 @@ services:
       - /opt/restic/local:/local
       - /opt/restic/restore:/restore
       - /opt/restic/cache:/root/.cache/restic
-      - /opt/restic/logs:/var/log/
+      - /opt/restic/logs:/var/log/restic
     environment:
       - TZ=${TIME_ZONE}
       - RESTIC_REPOSITORY=${RESTIC_REPOSITORY:-/local}
