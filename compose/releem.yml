@@ -1,0 +1,28 @@
+---
+services:
+  releem-agent:
+    image: ${RELEEM_IMAGE:-releem/releem-agent:1.19.4.4}
+    restart: unless-stopped
+    container_name: releem-agent
+    environment:
+      - RELEEM_HOSTNAME=${RELEEM_HOSTNAME}
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_USER=releem
+      - DB_PASSWORD=${RELEEM_DB_USER_PASSWORD}
+      - RELEEM_API_KEY=${RELEEM_API_KEY}
+      - MEMORY_LIMIT=${RELEEM_MEMORY_LIMIT:-0}
+    #volumes:
+    #  - /tmp/.mysqlconfigurer/:/tmp/.mysqlconfigurer/
+    networks:
+      - backend-seatable-net
+
+    # This database user must be created in mariadb
+    # CREATE USER 'releem'@'%' identified by '[RELEEM_DB_USER_PASSWORD]';
+    # GRANT PROCESS, REPLICATION CLIENT, SHOW VIEW ON *.* TO 'releem'@'%';
+    # GRANT SELECT ON performance_schema.events_statements_summary_by_digest TO 'releem'@'%';
+    # GRANT SELECT ON performance_schema.table_io_waits_summary_by_index_usage TO 'releem'@'%';
+
+networks:
+  backend-seatable-net:
+    name: backend-seatable-net

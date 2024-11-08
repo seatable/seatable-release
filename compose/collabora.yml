@@ -5,7 +5,7 @@ services:
       - ${COLLABORA_PORT:-6232}:${COLLABORA_PORT:-6232}
 
   collabora:
-    image: ${COLLABORA_IMAGE:-collabora/code:24.04.5.1.1}
+    image: ${COLLABORA_IMAGE:-collabora/code:24.04.8.2.1}
     container_name: collabora
     expose:
       - 9980

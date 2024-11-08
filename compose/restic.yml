@@ -1,7 +1,7 @@
 ---
 services:
   restic-backup:
-    image: ${SEATABLE_RESTIC_BACKUP_IMAGE:-seatable/restic-backup:1.2.7}
+    image: ${SEATABLE_RESTIC_BACKUP_IMAGE:-seatable/restic-backup:1.3.2}
     container_name: restic-backup
     restart: unless-stopped
     init: true
@@ -17,8 +17,8 @@ services:
       - TZ=${TIME_ZONE}
       - RESTIC_REPOSITORY=${RESTIC_REPOSITORY:-/local}
       - RESTIC_PASSWORD=${RESTIC_PASSWORD:?Variable is not set or empty}
-      - SEATABLE_DATABASE_DUMP=${SEATABLE_DATABASE_DUMP:-true}
-      - SEATABLE_DATABASE_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - DATABASE_DUMP=${SEATABLE_DATABASE_DUMP:-true}
+      - DATABASE_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - SEATABLE_BIGDATA_DUMP=${SEATABLE_BIGDATA_DUMP:-true}
       - LOG_TYPE=${LOG_TYPE:-stdout}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}

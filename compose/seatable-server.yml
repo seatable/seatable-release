@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.0.8}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.1.9}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -51,6 +51,7 @@ services:
         script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233} maps.googleapis.com unpkg.com;
         font-src 'self' data: unpkg.com;
         img-src 'self' data: blob: https: market.seatable.io mt0.google.com maps.googleapis.com maps.gstatic.com;
+        media-src 'self';
         form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
         connect-src 'self' market.seatable.io https:;
         frame-src 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232} ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
@@ -93,15 +94,17 @@ services:
       timeout: 10s
 
   mariadb:
-    image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.7-jammy}
+    image: ${SEATABLE_DB_IMAGE:-mariadb:11.4.3-noble}
     restart: unless-stopped
     container_name: mariadb
     environment:
       - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
+      - TZ=${TIME_ZONE}
     volumes:
       - "/opt/mariadb:/var/lib/mysql"
+      #- "/opt/seatable-compose/mariadb-custom.cnf:/etc/mysql/conf.d/99-mariadb-custom.cnf"
     networks:
       - backend-seatable-net
     healthcheck:
@@ -122,7 +125,7 @@ services:
       # more info at https://admin.seatable.io/upgrade/extra-upgrade-notice/
 
   memcached:
-    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.27-bookworm}
+    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.32-bookworm}
     restart: unless-stopped
     container_name: memcached
     entrypoint: memcached -m 256
@@ -135,7 +138,7 @@ services:
       timeout: 5s
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.4-bookworm}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.6-bookworm}
     restart: unless-stopped
     container_name: redis
     networks:
