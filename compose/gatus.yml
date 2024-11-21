@@ -1,0 +1,41 @@
+---
+services:
+  caddy:
+    ports:
+      - ${GATUS_PORT:-6220}:${GATUS_PORT:-6220}
+
+  seatable-server:
+    labels:
+      caddy.handle_path: /status
+      caddy.handle_path.0_redir: "https://${SEATABLE_SERVER_HOSTNAME}:${GATUS_PORT:-6220}"
+
+  gatus:
+    image: ${GATUS_IMAGE:-twinproduction/gatus:v5.13.1}
+    container_name: gatus
+    environment:
+      - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
+      # Token for authenticated API access
+      - GATUS_SEATABLE_ACCOUNT_TOKEN=${GATUS_SEATABLE_ACCOUNT_TOKEN:?Variable is not set or empty}
+      - GATUS_EMAIL_USERNAME=${GATUS_EMAIL_USERNAME:?Variable is not set or empty}
+      - GATUS_EMAIL_PASSWORD=${GATUS_EMAIL_PASSWORD:?Variable is not set or empty}
+      - GATUS_EMAIL_HOST=${GATUS_EMAIL_HOST:?Variable is not set or empty}
+      - GATUS_EMAIL_PORT=${GATUS_EMAIL_PORT:?Variable is not set or empty}
+      - GATUS_EMAIL_FROM=${GATUS_EMAIL_FROM:?Variable is not set or empty}
+      # Allows multiple values (separated by commas)
+      - GATUS_EMAIL_TO=${GATUS_EMAIL_TO:?Variable is not set or empty}
+    volumes:
+      # Persist SQLite database
+      - /opt/gatus:/data
+      - ./gatus-config.yml:/config/config.yaml
+    labels:
+      caddy: "https://${SEATABLE_SERVER_HOSTNAME}:${GATUS_PORT:-6220}"
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    networks:
+      - frontend-net
+      - backend-seatable-net
+
+networks:
+  frontend-net:
+    name: frontend-net
+  backend-seatable-net:
+    name: backend-seatable-net

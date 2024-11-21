@@ -1,0 +1,151 @@
+# Open Issues:
+# 1 Year Badge: https://github.com/TwiN/gatus/issues/714
+# Order option for front page: https://github.com/TwiN/gatus/issues/35
+# Ordering within a group: https://github.com/TwiN/gatus/issues/553
+
+storage:
+  type: sqlite
+  path: /data/data.db
+
+# Optional basic auth (OIDC is also supported)
+security:
+  basic:
+    username: "seatable"
+    # Hashed with bcrypt, then base64 encoded
+    # hunter2
+    password-bcrypt-base64: "JDJhJDEwJHRiMnRFakxWazZLdXBzRERQazB1TE8vckRLY05Yb1hSdnoxWU0yQ1FaYXZRSW1McmladDYu"
+
+ui:
+  header: "SeaTable Health Status (${SEATABLE_SERVER_HOSTNAME})"
+  logo: https://upload.wikimedia.org/wikipedia/commons/b/b7/Logo_word_seatable_vector_vector.svg
+
+alerting:
+  email:
+    username: "${GATUS_EMAIL_USERNAME}"
+    password: "${GATUS_EMAIL_PASSWORD}"
+    host: "${GATUS_EMAIL_HOST}"
+    port: ${GATUS_EMAIL_PORT}
+    from: "${GATUS_EMAIL_FROM}"
+    # Allows multiple values separated by commas
+    to: "${GATUS_EMAIL_TO}"
+    default-alert:
+      enabled: true
+      description: "Health check failed"
+      send-on-resolved: true
+      failure-threshold: 1
+      success-threshold: 5
+
+# Optional: Gatus won't send alerts during these periods
+maintenance:
+  enabled: false
+  start: "16:40"
+  duration: 5m
+  timezone: "Europe/Berlin"
+
+endpoints:
+  - name: SeaTable Login
+    group: SeaTable
+    url: https://${SEATABLE_SERVER_HOSTNAME}/
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: email
+
+  - name: SeaTable (Authenticated API Access)
+    group: SeaTable
+    url: https://${SEATABLE_SERVER_HOSTNAME}/api2/auth/ping
+    headers:
+      Authorization: "Bearer ${GATUS_SEATABLE_ACCOUNT_TOKEN}"
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: email
+
+  - name: SeaTable Web API
+    group: SeaTable
+    url: https://${SEATABLE_SERVER_HOSTNAME}/api2/ping/
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: email
+
+  - name: SeaTable SQL
+    group: SeaTable
+    url: https://${SEATABLE_SERVER_HOSTNAME}/dtable-db/ping/
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: email
+
+  - name: SeaTable Server
+    group: SeaTable
+    url: https://${SEATABLE_SERVER_HOSTNAME}/dtable-server/ping/
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: email
+
+  - name: SeaTable API Gateway
+    group: SeaTable
+    url: https://${SEATABLE_SERVER_HOSTNAME}/api-gateway/api/v2/ping/
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: email
+
+  - name: MariaDB
+    group: SeaTable
+    url: tcp://mariadb:3306
+    interval: 30s
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: email
+
+  - name: Redis
+    group: SeaTable
+    url: tcp://redis:6379
+    interval: 30s
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: email
+
+  - name: Certificate Expiration
+    group: SeaTable
+    url: "https://${SEATABLE_SERVER_HOSTNAME}"
+    interval: 1h
+    conditions:
+      - "[CERTIFICATE_EXPIRATION] > 240h"
+    alerts:
+      - type: email
+
+  - name: Python Pipeline
+    group: Additional Components
+    url: http://python-scheduler/ping/
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: email
+
+  - name: Collabora
+    group: Additional Components
+    url: https://${SEATABLE_SERVER_HOSTNAME}:6232
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: email
+
+# Check internet connectivity
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 60s
