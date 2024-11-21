@@ -13,6 +13,8 @@ security:
     username: "seatable"
     # Hashed with bcrypt, then base64 encoded
     # hunter2
+    # You can generate the hash with the following command: htpasswd -bnBC 9 "" $PASSWORD | tr -d ':\n' | base64
+    # htpasswd is contained in the apache2-utils package
     password-bcrypt-base64: "JDJhJDEwJHRiMnRFakxWazZLdXBzRERQazB1TE8vckRLY05Yb1hSdnoxWU0yQ1FaYXZRSW1McmladDYu"
 
 ui:
