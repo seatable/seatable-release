@@ -120,7 +120,7 @@ endpoints:
   - name: Certificate Expiration
     group: SeaTable
     url: "https://${SEATABLE_SERVER_HOSTNAME}"
-    interval: 1h
+    interval: 24h
     conditions:
       - "[CERTIFICATE_EXPIRATION] > 240h"
     alerts:
