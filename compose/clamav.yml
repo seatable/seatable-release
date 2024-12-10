@@ -1,0 +1,11 @@
+services:
+  av:
+    image: clamav/clamav:latest
+    container_name: clamav
+    networks:
+      - backend-seatable-net
+
+networks:
+  backend-seatable-net:
+    name: backend-seatable-net
+  
