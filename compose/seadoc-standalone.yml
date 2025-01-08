@@ -1,3 +1,4 @@
+---
 services:
 
   seadoc:
@@ -5,8 +6,8 @@ services:
     container_name: seadoc
     volumes:
       - ${SEADOC_VOLUME:-/opt/seadoc-data/}:/shared
-    ports:
-      - "80:80"
+    # ports:
+    #   - "80:80"
     environment:
       - DB_HOST=${SEATABLE_MYSQL_DB_HOST:-mariadb}
       - DB_PORT=${SEATABLE_MYSQL_DB_PORT:-3306}
@@ -16,10 +17,13 @@ services:
       - TIME_ZONE=${TIME_ZONE:-Etc/UTC}
       - JWT_PRIVATE_KEY=${DTABLE_PRIVATE_KEY:?Variable is not set or empty}
       - NON_ROOT=${NON_ROOT:-false}
-      - SEAHUB_SERVICE_URL=${SEATABLE_SERVER_PROTOCOL:-http}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
+      - SEAHUB_SERVICE_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
     networks:
       - frontend-net
       - backend-seatable-net
+    labels:
+      caddy: ${SEADOC_SERVER_PROTOCOL:-https}://${SEADOC_SERVER_HOSTNAME:?Variable is not set or empty}
+      caddy.reverse_proxy: "{{upstreams 80}}"
 
 networks:
   frontend-net:
