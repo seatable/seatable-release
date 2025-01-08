@@ -20,9 +20,9 @@ services:
       - TIME_ZONE=${TIME_ZONE:-Etc/UTC}
       - JWT_PRIVATE_KEY=${DTABLE_PRIVATE_KEY:?Variable is not set or empty}
       - NON_ROOT=${NON_ROOT:-false}
-      - SEAHUB_SERVICE_URL=${SEATABLE_SERVER_PROTOCOL:-http}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
+      - SEAHUB_SERVICE_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
     labels:
-      caddy: ${SEATABLE_SERVER_PROTOCOL:-http}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}:${SEADOC_PORT:-7070}
+      caddy: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}:${SEADOC_PORT:-7070}
       caddy.reverse_proxy: "{{upstreams 80}}"
     depends_on:
       - mariadb
