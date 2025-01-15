@@ -2,7 +2,7 @@
 services:
 
   seadoc:
-    image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:1.0-latest}
+    image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:1.0.3}
     container_name: seadoc
     volumes:
       - ${SEADOC_VOLUME:-/opt/seadoc-data/}:/shared
@@ -24,6 +24,12 @@ services:
     labels:
       caddy: ${SEADOC_SERVER_PROTOCOL:-https}://${SEADOC_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:7070 || exit 1"]
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
 
 networks:
   frontend-net:
