@@ -5,7 +5,7 @@ services:
       - ${SEADOC_PORT:-7070}:${SEADOC_PORT:-7070}
 
   seadoc:
-    image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:1.0-latest}
+    image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:1.0.3}
     container_name: seadoc
     volumes:
       - ${SEADOC_VOLUME:-/opt/seadoc-data/}:/shared
@@ -29,6 +29,12 @@ services:
     networks:
       - frontend-net
       - backend-seatable-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:7070 || exit 1"]
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
 
 networks:
   frontend-net:
