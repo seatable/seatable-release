@@ -1,0 +1,17 @@
+---
+services:
+  caddy:
+    ports:
+      - ${TLDRAW_PORT:-6239}:${TLDRAW_PORT:-6239}
+
+  tldraw-worker:
+    image: ${TLDRAW_IMAGE:-seatable/tldraw-worker:2.0.0}
+    container_name: tldraw-worker
+    command: yarn docker
+    environment:
+      - SEATABLE_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
+    labels:
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:${TLDRAW_PORT:-6239}
+      caddy.reverse_proxy: "{{upstreams 5858}}"
+    networks:
+      - frontend-net
