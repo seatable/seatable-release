@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.1.9}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.2.7}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -135,7 +135,7 @@ services:
       # more info at https://admin.seatable.io/upgrade/extra-upgrade-notice/
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.6-bookworm}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.7-bookworm}
     restart: unless-stopped
     container_name: redis
     networks:

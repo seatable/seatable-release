@@ -5,7 +5,7 @@ services:
       - ${UPTIMEKUMA_PORT:-6230}:${UPTIMEKUMA_PORT:-6230}
 
   uptime-kuma:
-    image: ${UPTIMEKUMA_IMAGE:-louislam/uptime-kuma:1.23.15}
+    image: ${UPTIMEKUMA_IMAGE:-louislam/uptime-kuma:1.23.16}
     restart: unless-stopped
     container_name: uptime-kuma
     volumes:

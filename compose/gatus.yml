@@ -15,7 +15,7 @@ services:
   # GATUS_PORT
   # GATUS_EMAIL_TO
   gatus:
-    image: ${GATUS_IMAGE:-twinproduction/gatus:v5.13.1}
+    image: ${GATUS_IMAGE:-twinproduction/gatus:v5.16.0}
     container_name: gatus
     environment:
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
