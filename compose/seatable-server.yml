@@ -44,7 +44,6 @@ services:
       caddy_0.header.X-Content-Type-Options: "nosniff"
       caddy_0.header.X-Frame-Options: "SAMEORIGIN"
       caddy_0.header.Set-Cookie: '(.*) "$1; SameSite=None; Secure"'
-      caddy_0.header.defer:
       caddy_0.header.Content-Security-Policy: "`
         block-all-mixed-content;
         default-src 'none';
