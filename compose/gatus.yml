@@ -6,8 +6,8 @@ services:
 
   seatable-server:
     labels:
-      caddy.handle_path: /status
-      caddy.handle_path.0_redir: "https://${SEATABLE_SERVER_HOSTNAME}:${GATUS_PORT:-6220}"
+      caddy_0.handle_path: /status
+      caddy_0.handle_path.0_redir: "https://${SEATABLE_SERVER_HOSTNAME}:${GATUS_PORT:-6220}"
 
   # Available .env variables
   # GATUS_IMAGE
@@ -17,6 +17,7 @@ services:
   gatus:
     image: ${GATUS_IMAGE:-twinproduction/gatus:v5.16.0}
     container_name: gatus
+    restart: unless-stopped
     environment:
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       # Token for authenticated API access
@@ -34,7 +35,7 @@ services:
       - /opt/gatus:/data
       - ./gatus-config.yml:/config/config.yaml
     labels:
-      caddy: "https://${SEATABLE_SERVER_HOSTNAME}:${GATUS_PORT:-6220}"
+      caddy: "${SEATABLE_SERVER_HOSTNAME}:${GATUS_PORT:-6220}"
       caddy.reverse_proxy: "{{upstreams 8080}}"
     networks:
       - frontend-net

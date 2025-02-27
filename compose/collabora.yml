@@ -7,6 +7,7 @@ services:
   collabora:
     image: ${COLLABORA_IMAGE:-collabora/code:24.04.12.3.1}
     container_name: collabora
+    restart: unless-stopped
     expose:
       - 9980
     cap_add:

@@ -7,6 +7,7 @@ services:
   tldraw-worker:
     image: ${TLDRAW_IMAGE:-seatable/tldraw-worker:2.0.1}
     container_name: tldraw-worker
+    restart: unless-stopped
     command: yarn docker
     environment:
       - SEATABLE_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
