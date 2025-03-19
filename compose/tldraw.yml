@@ -16,3 +16,9 @@ services:
       caddy.reverse_proxy: "{{upstreams 5858}}"
     networks:
       - frontend-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5858/ping || exit 1"]
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      timeout: 5s
