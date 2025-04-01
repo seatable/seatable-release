@@ -11,13 +11,23 @@ services:
         target: "/shared/seatable/seatable-license.txt"
         read_only: ${SEATABLE_LICENSE_FORCE_READ_ONLY:-false}
     environment:
-      - DB_HOST=mariadb
-      - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_MYSQL_DB_HOST=${SEATABLE_MYSQL_DB_HOST:-mariadb}
+      - SEATABLE_MYSQL_DB_PORT=${SEATABLE_MYSQL_DB_PORT:-3306}
+      - INIT_SEATABLE_MYSQL_ROOT_PASSWORD=${INIT_SEATABLE_MYSQL_ROOT_PASSWORD:-}
+      - SEATABLE_MYSQL_DB_USER=${SEATABLE_MYSQL_DB_USER:-seatable}
+      - SEATABLE_MYSQL_DB_PASSWORD=${SEATABLE_MYSQL_DB_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_MYSQL_DB_DTABLE_DB_NAME=${SEATABLE_MYSQL_DB_DTABLE_DB_NAME:-dtable_db}
+      - SEATABLE_MYSQL_DB_CCNET_DB_NAME=${SEATABLE_MYSQL_DB_CCNET_DB_NAME:-ccnet_db}
+      - SEATABLE_MYSQL_DB_SEAFILE_DB_NAME=${SEATABLE_MYSQL_DB_SEAFILE_DB_NAME:-seafile_db}
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       - SEATABLE_SERVER_PROTOCOL=${SEATABLE_SERVER_PROTOCOL:-https}
       - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}
       - SEATABLE_ADMIN_PASSWORD=${SEATABLE_ADMIN_PASSWORD:?Variable is not set or empty}
       - TIME_ZONE=${TIME_ZONE}
+      - REDIS_SERVER=${REDIS_SERVER:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
@@ -107,7 +117,7 @@ services:
     restart: unless-stopped
     container_name: mariadb
     environment:
-      - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_ROOT_PASSWORD=${INIT_SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
       - TZ=${TIME_ZONE}
