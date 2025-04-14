@@ -1,0 +1,8 @@
+---
+services:
+  autoheal:
+    image: ${AUTOHEAL_IMAGE:-willfarrell/autoheal:1.2.0}
+    container_name: autoheal
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
