@@ -4,7 +4,7 @@ services:
     image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:1.1.0-testing}
     container_name: seatable-ai
     volumes:
-      - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai-data/}:/shared
+      - ${SEATABLE_AI_VOLUME:-/opt/seatable-server/}:/shared
     # ports:
     #   - "8888:8888"
     environment:
