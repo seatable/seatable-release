@@ -5,7 +5,7 @@ services:
     image: ${SEASEARCH_IMAGE:-seafileltd/seasearch:latest}
     container_name: seasearch
     volumes:
-      - ${SS_DATA_PATH:-/opt/seatable-server}:/opt/seasearch/data
+      - ${SS_DATA_PATH:-/opt/seasearch-data}:/opt/seasearch/data
     environment:
       - SS_FIRST_ADMIN_USER=${INIT_SS_ADMIN_USER:-}
       - SS_FIRST_ADMIN_PASSWORD=${INIT_SS_ADMIN_PASSWORD:-}
