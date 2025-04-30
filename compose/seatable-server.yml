@@ -6,6 +6,7 @@ services:
     container_name: seatable-server
     volumes:
       - "/opt/seatable-server:/shared"
+      - ./seatable-nginx.conf:/etc/nginx/sites-enabled/default
       - type: bind
         source: "./seatable-license.txt"
         target: "/shared/seatable/seatable-license.txt"
