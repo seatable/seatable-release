@@ -14,8 +14,8 @@ services:
       - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
       - SEATABLE_MYSQL_DB_PORT=${MARIADB_PORT:-3306}
       - SEATABLE_MYSQL_DB_USER=root
-      - SEATABLE_MYSQL_DB_PASSWORD=${SEATABLE_MYSQL_DB_PASSWORD:?Variable is not set or empty}
-      - INIT_SEATABLE_MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_DB_PASSWORD}
+      - SEATABLE_MYSQL_DB_PASSWORD=${MARIADB_PASSWORD:?Variable is not set or empty}
+      - INIT_SEATABLE_MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-${MARIADB_PASSWORD}}
       - SEATABLE_MYSQL_DB_DTABLE_DB_NAME=dtable_db
       - SEATABLE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
       - SEATABLE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
@@ -119,7 +119,7 @@ services:
     restart: unless-stopped
     container_name: mariadb
     environment:
-      - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-${MARIADB_PASSWORD}}
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
       - TZ=${TIME_ZONE}

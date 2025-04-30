@@ -15,7 +15,7 @@ services:
   # GATUS_PORT
   # GATUS_EMAIL_TO
   gatus:
-    image: ${GATUS_IMAGE:-twinproduction/gatus:v5.16.0}
+    image: ${GATUS_IMAGE:-twinproduction/gatus:v5.17.0}
     container_name: gatus
     restart: unless-stopped
     environment:
