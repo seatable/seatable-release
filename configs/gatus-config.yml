@@ -65,7 +65,7 @@ endpoints:
       - "[STATUS] == 200"
     alerts:
       - type: email
-    enabled: false
+    enabled: ${GATUS_ENABLE_SEATABLE_AUTH_PING}
 
   - name: SeaTable Web API
     group: SeaTable
