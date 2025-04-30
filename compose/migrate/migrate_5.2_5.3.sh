@@ -1,58 +1,58 @@
+#!/bin/bash
 
+set -euo pipefail
 
-# I assume, that 
-# - /opt/seatable-compose/.env is mounted to /tmp/.env
-# - /opt/seatable-server/seatable/conf is mounted to /tmp/conf/
+NOW=$(date +"%Y-%m-%d-%H-%M-%S")
+CONFIG_DIRECTORY="/opt/seatable-server/seatable/conf"
+BACKUP_DIRECTORY="/opt/seatable-server/seatable/conf-${NOW}.bak"
 
-# JWT_PRIVATE_KEY
-# TODO: add JWT_PRIVATE_KEY only, if not empty...
-private_key=$(grep -oP '"private_key"\s*:\s*"\K[^"]+' /tmp/conf/dtable_server_config.json)
+echo "Backing up ${CONFIG_DIRECTORY} to ${BACKUP_DIRECTORY}"
+cp -R "${CONFIG_DIRECTORY}" "${BACKUP_DIRECTORY}"
+
+private_key=$(grep -oP '"private_key"\s*:\s*"\K[^"]+' "${CONFIG_DIRECTORY}/dtable_server_config.json")
 if [ -n "$private_key" ]; then
     echo "I attach your private key to your .env file. Your private key is: $private_key"
-    echo "JWT_PRIVATE_KEY=$private_key" >> /tmp/.env
+    echo "JWT_PRIVATE_KEY=$private_key" >> /opt/seatable-compose/.env
 fi 
-sed -i '/private_key.*/d' /tmp/conf/dtable_server_config.json
-sed -i '/DTABLE_PRIVATE_KEY.*/d' /tmp/conf/dtable_web_settings.py
 
-# MARIADB (dtable_server_config.json)
-sed -i 's/SEATABLE_MYSQL_ROOT_PASSWORD=/MARIADB_PASSWORD=/' /tmp/.env
-sed -i '/"host":/d' /tmp/conf/dtable_server_config.json
-sed -i '/"user":/d' /tmp/conf/dtable_server_config.json
-sed -i '/"password":/d' /tmp/conf/dtable_server_config.json
-sed -i '/"database":/d' /tmp/conf/dtable_server_config.json
-sed -i '/"port":/d' /tmp/conf/dtable_server_config.json
+echo "Removing private key from dtable_server_config.json and dtable_web_settings.py"
+sed -i '/private_key.*/d' "${CONFIG_DIRECTORY}/dtable_server_config.json"
+sed -i '/DTABLE_PRIVATE_KEY.*/d' "${CONFIG_DIRECTORY}/dtable_web_settings.py"
 
-# REDIS (dtable_server_config.json)
-sed -i '/redis_/d' /tmp/conf/dtable_server_config.json
+echo "Cleaning up dtable_server_config.json"
+sed -i 's/SEATABLE_MYSQL_ROOT_PASSWORD=/MARIADB_PASSWORD=/' /opt/seatable-compose/.env
+sed -i '/"host":/d' "${CONFIG_DIRECTORY}/dtable_server_config.json"
+sed -i '/"user":/d' "${CONFIG_DIRECTORY}/dtable_server_config.json"
+sed -i '/"password":/d' "${CONFIG_DIRECTORY}/dtable_server_config.json"
+sed -i '/"database":/d' "${CONFIG_DIRECTORY}/dtable_server_config.json"
+sed -i '/"port":/d' "${CONFIG_DIRECTORY}/dtable_server_config.json"
+sed -i '/redis_/d' "${CONFIG_DIRECTORY}/dtable_server_config.json"
 
-# ccnet.conf
-rm -f /tmp/conf/ccnet.conf
+echo "Removing ccnet.conf"
+rm -f "${CONFIG_DIRECTORY}/ccnet.conf"
 
-# [REDIS] from dtable-events.conf
+echo 'Removing [REDIS] section from dtable-events.conf'
 awk '
 /^\[REDIS\]/ {skip=1; next}
 /^\[/ {skip=0}
 !skip
-' /tmp/conf/dtable-events.conf > /tmp/conf/dtable-events.conf
+' "${CONFIG_DIRECTORY}/dtable-events.conf" > /tmp/dtable-events.conf
+mv /tmp/dtable-events.conf "${CONFIG_DIRECTORY}/dtable-events.conf"
 
-# [DATABASE] from dtable-events.conf
+echo 'Removing [DATABASE] section from dtable-events.conf'
 awk '
 /^\[DATABASE\]/ {skip=1; next}
 /^\[/ {skip=0}
 !skip
-' /tmp/conf/dtable-events.conf > /tmp/conf/dtable-events.conf
+' "${CONFIG_DIRECTORY}/dtable-events.conf" > /tmp/dtable-events.conf
+mv /tmp/dtable-events.conf "${CONFIG_DIRECTORY}/dtable-events.conf"
 
-# REMOVE from dtable_web_settings.py
-awk '
-/^(DATABASES|CACHES)[[:space:]]*=/ {inblock=1; brace=0}
-inblock {
-    brace += gsub(/\{/, "{")
-    brace -= gsub(/\}/, "}")
-    if (brace == 0) {inblock=0}
-    next
-}
-{print}
-' /tmp/conf/dtable_web_settings.py > /tmp/conf/dtable_web_settings.py
+echo "Removing DATABASES from dtable_web_settings.py"
+sed -i '/^DATABASES = {/,/^}/d' "${CONFIG_DIRECTORY}/dtable_web_settings.py"
 
-# backup copy of nginx.conf and then recreate it
-# ...
+echo "Removing CACHES from dtable_web_settings.py"
+sed -i '/^CACHES = {/,/^}/d' "${CONFIG_DIRECTORY}/dtable_web_settings.py"
+
+echo "Done!"
+echo "Please verify your configuration files."
+echo "You can use \"diff --unified --color ${BACKUP_DIRECTORY} ${CONFIG_DIRECTORY}\" to compare both directories."
