@@ -11,6 +11,7 @@ services:
 
   # Available .env variables
   # GATUS_IMAGE
+  # GATUS_ENABLE_SEATABLE_AUTH_PING (default:false)
   # GATUS_SEATABLE_ACCOUNT_TOKEN
   # GATUS_PORT
   # GATUS_EMAIL_TO
@@ -21,6 +22,7 @@ services:
     environment:
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       # Token for authenticated API access
+      - GATUS_ENABLE_SEATABLE_AUTH_PING=${GATUS_ENABLE_SEATABLE_AUTH_PING:-false}
       - GATUS_SEATABLE_ACCOUNT_TOKEN=${GATUS_SEATABLE_ACCOUNT_TOKEN:-}
       # Alert via E-Mail
       - GATUS_EMAIL_USERNAME=${SEATABLE_EMAIL_HOST_USER:-}

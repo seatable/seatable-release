@@ -65,6 +65,7 @@ endpoints:
       - "[STATUS] == 200"
     alerts:
       - type: email
+    enabled: false
 
   - name: SeaTable Web API
     group: SeaTable
