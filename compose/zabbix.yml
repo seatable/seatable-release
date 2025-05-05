@@ -24,7 +24,7 @@ services:
     environment:
       - DB_SERVER_HOST=mariadb
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_PASSWORD=${MARIADB_PASSWORD:?Variable is not set or empty}
       - MYSQL_DATABASE=zabbix
       - ZBX_DEBUGLEVEL=3
     sysctls:
@@ -49,7 +49,7 @@ services:
       - ZBX_SERVER_HOST=zabbix-server
       - DB_SERVER_HOST=mariadb
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_PASSWORD=${MARIADB_PASSWORD:?Variable is not set or empty}
       - MYSQL_DATABASE=zabbix
       - PHP_TZ=${TIME_ZONE}
     labels:

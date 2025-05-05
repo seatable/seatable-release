@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     container_name: mariadb
     environment:
-      - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_ROOT_PASSWORD=${MARIADB_PASSWORD:?Variable is not set or empty}
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
     volumes:
@@ -33,7 +33,7 @@ services:
     environment:
       - TIME_ZONE=${TIME_ZONE}
       - DB_HOST=${SEATABLE_MYSQL_HOST:-mariadb}
-      - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - DB_ROOT_PASSWD=${MARIADB_PASSWORD:?Variable is not set or empty}
       - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:?Variable is not set or empty}
       - SEATABLE_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME}
       - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://python-starter:8080}
