@@ -1,25 +1,5 @@
 ---
 services:
-  caddy:
-    image: ${IMAGE_CADDY:-lucaslorentz/caddy-docker-proxy:2.9.2-alpine}
-    restart: unless-stopped
-    container_name: caddy
-    ports:
-      - 80:80
-      - 443:443
-    environment:
-      - CADDY_INGRESS_NETWORKS=frontend-net
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/opt/caddy:/data/caddy"
-    networks:
-      - frontend-net
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:2019/metrics || exit 1"]
-      start_period: 20s
-      interval: 20s
-      timeout: 5s
-      retries: 3
   mariadb:
     image: ${SEATABLE_DB_IMAGE:-mariadb:11.4.3-noble}
     restart: unless-stopped
