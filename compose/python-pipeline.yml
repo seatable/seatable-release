@@ -13,7 +13,10 @@ services:
       - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://python-starter:8080}
       - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
       - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
+      # Timeout is defined in seconds
+      - PYTHON_PROCESS_TIMEOUT=${PYTHON_PROCESS_TIMEOUT:-60}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      - LOG_TO_STDOUT=true
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -43,7 +46,14 @@ services:
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
       - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.0}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
+      - PYTHON_RUNNER_CONTAINER_CPUS=${PYTHON_RUNNER_CONTAINER_CPUS:-1}
+      - PYTHON_RUNNER_CONTAINER_MEMORY=${PYTHON_RUNNER_CONTAINER_MEMORY:-1g}
+      # Timeout is defined in seconds
+      - PYTHON_PROCESS_TIMEOUT=${PYTHON_PROCESS_TIMEOUT:-60}
+      - PYTHON_RUNNER_READ_ONLY_FILESYSTEM=${PYTHON_RUNNER_READ_ONLY_FILESYSTEM:-true}
+      - PYTHON_RUNNER_TMPFS_MOUNT_SIZE_IN_BYTES=${PYTHON_RUNNER_TMPFS_MOUNT_SIZE_IN_BYTES:-104857600}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      - LOG_TO_STDOUT=true
     networks:
       - backend-scheduler-net
 
@@ -53,9 +63,19 @@ services:
     container_name: python-runner
     networks:
       - backend-scheduler-net
+      # This is added to ensure that the runner-net network is created
+      # Docker-Compose does not seem to create networks that are not used by any containers in the compose file(s)
+      - runner-net
 
 networks:
   frontend-net:
     name: frontend-net
   backend-scheduler-net:
     name: backend-scheduler-net
+  # Network shared by all job containers
+  runner-net:
+    name: runner-net
+    driver: bridge
+    driver_opts:
+      # Disable inter-container connectivity
+      com.docker.network.bridge.enable_icc: "false"
