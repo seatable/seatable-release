@@ -63,7 +63,7 @@ services:
       - LOG_TO_STDOUT=true
     labels:
       caddy: ${PYTHON_SCHEDULER_PROTOCOL:-https}://${PYTHON_SCHEDULER_HOSTNAME:?Variable is not set or empty}
-      caddy.@denied.not_0: "remote_ip ${SEATABLE_SERVER_PUBLIC_IP:?Variable is not set or empty} private_ranges"
+      caddy.@denied.not_0: "remote_ip ${SEATABLE_SERVER_PUBLIC_IP:?Variable is not set or empty}"
       caddy.abort: "@denied"
       caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
