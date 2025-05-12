@@ -1,5 +1,25 @@
 ---
 services:
+  caddy:
+    image: ${IMAGE_CADDY:-lucaslorentz/caddy-docker-proxy:2.9.2-alpine}
+    restart: unless-stopped
+    container_name: caddy
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - CADDY_INGRESS_NETWORKS=frontend-net
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/opt/caddy:/data/caddy"
+    networks:
+      - frontend-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:2019/metrics || exit 1"]
+      start_period: 20s
+      interval: 20s
+      timeout: 5s
+      retries: 3
   mariadb:
     image: ${SEATABLE_DB_IMAGE:-mariadb:11.4.3-noble}
     restart: unless-stopped
@@ -40,8 +60,11 @@ services:
       - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
       - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      - LOG_TO_STDOUT=true
     labels:
       caddy: ${PYTHON_SCHEDULER_PROTOCOL:-https}://${PYTHON_SCHEDULER_HOSTNAME:?Variable is not set or empty}
+      caddy.@denied.not_0: "remote_ip ${SEATABLE_SERVER_PUBLIC_IP:?Variable is not set or empty} private_ranges"
+      caddy.abort: "@denied"
       caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
       - frontend-net
@@ -70,6 +93,7 @@ services:
       - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.1.2}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      - LOG_TO_STDOUT=true
     networks:
       - backend-scheduler-net
 
