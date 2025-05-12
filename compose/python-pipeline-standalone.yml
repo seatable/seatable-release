@@ -103,9 +103,19 @@ services:
     container_name: python-runner
     networks:
       - backend-scheduler-net
+      # This is added to ensure that the runner-net network is created
+      # Docker-Compose does not seem to create networks that are not used by any containers in the compose file(s)
+      - runner-net
 
 networks:
   frontend-net:
     name: frontend-net
   backend-scheduler-net:
     name: backend-scheduler-net
+  # Network shared by all job containers
+  runner-net:
+    name: runner-net
+    driver: bridge
+    driver_opts:
+      # Disable inter-container connectivity
+      com.docker.network.bridge.enable_icc: "false"
