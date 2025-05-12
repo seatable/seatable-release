@@ -59,6 +59,8 @@ services:
       - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://python-starter:8080}
       - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
       - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
+      # Timeout is defined in seconds
+      - PYTHON_PROCESS_TIMEOUT=${PYTHON_PROCESS_TIMEOUT:-60}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
       - LOG_TO_STDOUT=true
     labels:
@@ -92,6 +94,8 @@ services:
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
       - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.1.2}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
+      # Timeout is defined in seconds
+      - PYTHON_PROCESS_TIMEOUT=${PYTHON_PROCESS_TIMEOUT:-60}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
       - LOG_TO_STDOUT=true
     networks:
