@@ -33,6 +33,13 @@ services:
       retries: 3
       start_period: 20s
       timeout: 10s
+    logging:
+      driver: json-file
+      options:
+        # Maximum size per file
+        max-size: 10m
+        # Maximum number of files
+        max-file: 3
 
   python-starter:
     image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:4.2.2}
@@ -58,6 +65,13 @@ services:
       - LOG_TO_STDOUT=true
     networks:
       - backend-scheduler-net
+    logging:
+      driver: json-file
+      options:
+        # Maximum size per file
+        max-size: 10m
+        # Maximum number of files
+        max-file: 3
 
   python-runner:
     image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.2}
