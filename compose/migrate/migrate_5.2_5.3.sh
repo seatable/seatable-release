@@ -53,6 +53,11 @@ sed -i '/^DATABASES = {/,/^}/d' "${CONFIG_DIRECTORY}/dtable_web_settings.py"
 echo "Removing CACHES from dtable_web_settings.py"
 sed -i '/^CACHES = {/,/^}/d' "${CONFIG_DIRECTORY}/dtable_web_settings.py"
 
+echo "Generating REDIS_PASSWORD using pwgen"
+REDIS_PASSWORD=$(pwgen 32 1)
+echo "Adding REDIS_PASSWORD to /opt/seatable-compose/.env"
+echo "REDIS_PASSWORD=${REDIS_PASSWORD}" >> /opt/seatable-compose/.env
+
 echo "Done!"
 echo "Please verify your configuration files."
 echo "You can use \"diff --unified --color ${BACKUP_DIRECTORY} ${CONFIG_DIRECTORY}\" to compare both directories."
