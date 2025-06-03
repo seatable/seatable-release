@@ -1,8 +1,4 @@
----
 services:
-  caddy:
-    ports:
-      - ${SEADOC_PORT:-7070}:${SEADOC_PORT:-7070}
 
   seadoc:
     image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:2.0.1-testing}
@@ -20,8 +16,16 @@ services:
       - NON_ROOT=${NON_ROOT:-false}
       - SEAHUB_SERVICE_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
     labels:
-      caddy: "${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}:${SEADOC_PORT:-7070}"
-      caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy: "${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}"
+      caddy.@ws.0_header: "Connection *Upgrade*"
+      caddy.@ws.1_header: "Upgrade websocket"
+      caddy.0_reverse_proxy: "@ws {{upstreams 80}}"
+      caddy.1_handle_path: "/socket.io/*"
+      caddy.1_handle_path.0_rewrite: "* /socket.io{uri}"
+      caddy.1_handle_path.1_reverse_proxy: "{{upstreams 80}}"
+      caddy.2_handle_path: "/sdoc-server/*"
+      caddy.2_handle_path.0_rewrite: "* {uri}"
+      caddy.2_handle_path.1_reverse_proxy: "{{upstreams 80}}"
     depends_on:
       - mariadb:
     networks:
