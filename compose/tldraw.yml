@@ -5,7 +5,7 @@ services:
       - ${TLDRAW_PORT:-6239}:${TLDRAW_PORT:-6239}
 
   tldraw-worker:
-    image: ${TLDRAW_IMAGE:-seatable/tldraw-worker:2.1.0}
+    image: ${TLDRAW_IMAGE:-seatable/tldraw-worker:2.1.1}
     container_name: tldraw-worker
     restart: unless-stopped
     environment:
