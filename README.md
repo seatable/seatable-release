@@ -1,6 +1,6 @@
 ## SeaTable Docker Compose Releases
 
-This repository contains a docker compose project to deploy SeaTable Server and additional services like the Python Pipeline or OnlyOffice. These releases are being referenced in the [SeaTable Admin Manual](https://admin.seatable.io/). Distribution Method is a release tar download from GitHub.
+This repository contains a docker compose project to deploy SeaTable Server and additional services like the Python Pipeline or OnlyOffice. These releases are being referenced in the [SeaTable Admin Manual](https://admin.seatable.com/). Distribution Method is a release tar download from GitHub.
 
 It is recommended to follow the instructions of the Admin Manual for the installation of SeaTable.
 
