@@ -9,10 +9,13 @@ BACKUP_DIRECTORY="/opt/seatable-server/seatable/conf-${NOW}.bak"
 echo "Backing up ${CONFIG_DIRECTORY} to ${BACKUP_DIRECTORY}"
 cp -R "${CONFIG_DIRECTORY}" "${BACKUP_DIRECTORY}"
 
+echo '' >> /opt/seatable-compose/.env
+echo '# new with version 5.3' >> /opt/seatable-compose/.env
+
 private_key=$(grep -oP '"private_key"\s*:\s*"\K[^"]+' "${CONFIG_DIRECTORY}/dtable_server_config.json")
 if [ -n "$private_key" ]; then
     echo "I attach your private key to your .env file. Your private key is: $private_key"
-    echo "JWT_PRIVATE_KEY=$private_key" >> /opt/seatable-compose/.env
+    echo "JWT_PRIVATE_KEY='$private_key'" >> /opt/seatable-compose/.env
 fi 
 
 echo "Removing private key from dtable_server_config.json and dtable_web_settings.py"
@@ -56,7 +59,7 @@ sed -i '/^CACHES = {/,/^}/d' "${CONFIG_DIRECTORY}/dtable_web_settings.py"
 echo "Generating REDIS_PASSWORD using pwgen"
 REDIS_PASSWORD=$(pwgen 32 1)
 echo "Adding REDIS_PASSWORD to /opt/seatable-compose/.env"
-echo "REDIS_PASSWORD=${REDIS_PASSWORD}" >> /opt/seatable-compose/.env
+echo "REDIS_PASSWORD='${REDIS_PASSWORD}'" >> /opt/seatable-compose/.env
 
 echo "Done!"
 echo "Please verify your configuration files."
