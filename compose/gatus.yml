@@ -11,16 +11,18 @@ services:
 
   # Available .env variables
   # GATUS_IMAGE
+  # GATUS_ENABLE_SEATABLE_AUTH_PING (default:false)
   # GATUS_SEATABLE_ACCOUNT_TOKEN
   # GATUS_PORT
   # GATUS_EMAIL_TO
   gatus:
-    image: ${GATUS_IMAGE:-twinproduction/gatus:v5.16.0}
+    image: ${GATUS_IMAGE:-twinproduction/gatus:v5.17.0}
     container_name: gatus
     restart: unless-stopped
     environment:
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       # Token for authenticated API access
+      - GATUS_ENABLE_SEATABLE_AUTH_PING=${GATUS_ENABLE_SEATABLE_AUTH_PING:-false}
       - GATUS_SEATABLE_ACCOUNT_TOKEN=${GATUS_SEATABLE_ACCOUNT_TOKEN:-}
       # Alert via E-Mail
       - GATUS_EMAIL_USERNAME=${SEATABLE_EMAIL_HOST_USER:-}
@@ -33,7 +35,7 @@ services:
     volumes:
       # Persist SQLite database
       - /opt/gatus:/data
-      - ./gatus-config.yml:/config/config.yaml
+      - ./config/gatus-config.yml:/config/config.yaml
     labels:
       caddy: "${SEATABLE_SERVER_HOSTNAME}:${GATUS_PORT:-6220}"
       caddy.reverse_proxy: "{{upstreams 8080}}"
