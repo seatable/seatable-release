@@ -5,7 +5,7 @@ services:
       - ${SEADOC_PORT:-7070}:${SEADOC_PORT:-7070}
 
   seadoc:
-    image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:2.0.1-testing}
+    image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:2.0.3-testing}
     container_name: seadoc
     volumes:
       - ${SEADOC_VOLUME:-/opt/seadoc/}:/shared
