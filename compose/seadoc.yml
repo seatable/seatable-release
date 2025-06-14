@@ -4,6 +4,11 @@ services:
     ports:
       - ${SEADOC_PORT:-6240}:${SEADOC_PORT:-6240}
 
+  seatable-server:
+    environment:
+      - ENABLE_SEADOC=true
+      - SEADOC_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-}://${SEATABLE_SERVER_HOSTNAME:-}:${SEADOC_PORT:-6240}
+
   seadoc:
     image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:2.0.3-testing}
     container_name: seadoc
