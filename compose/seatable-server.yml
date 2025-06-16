@@ -29,6 +29,8 @@ services:
       - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}
       - SEATABLE_ADMIN_PASSWORD=${SEATABLE_ADMIN_PASSWORD:?Variable is not set or empty}
       - TIME_ZONE=${TIME_ZONE}
+      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
+      - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
       - SEATABLE_EMAIL_USE_TLS=${SEATABLE_EMAIL_USE_TLS:-}
       - SEATABLE_EMAIL_HOST=${SEATABLE_EMAIL_HOST:-}

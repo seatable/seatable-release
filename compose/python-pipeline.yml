@@ -1,10 +1,5 @@
 ---
 services:
-  seatable-server:
-    environment:
-      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
-      - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-}
-
   python-scheduler:
     image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:4.2.2}
     restart: unless-stopped
