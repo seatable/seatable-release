@@ -10,6 +10,7 @@ services:
       - MARIADB_AUTO_UPGRADE=1
     volumes:
       - "/opt/mariadb:/var/lib/mysql"
+      - "${PYTHON_SCHEDULER_LOGS_DIR:-/opt/seatable-python-pipeline/logs/scheduler-logs}:/opt/scheduler/logs"
     networks:
       - backend-scheduler-net
     healthcheck:
@@ -76,6 +77,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
+      - "${PYTHON_STARTER_LOGS_DIR:-/opt/seatable-python-pipeline/logs/scheduler-logs}:/opt/seatable-python-starter/logs"
     environment:
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}

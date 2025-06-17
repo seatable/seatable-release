@@ -19,6 +19,8 @@ services:
       - LOG_TO_STDOUT=true
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - "/opt/seatable-server/seatable/logs:/opt/scheduler/logs"
     networks:
       - frontend-net
       - backend-scheduler-net
@@ -48,6 +50,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
+      - "/opt/seatable-server/seatable/logs:/opt/seatable-python-starter/logs"
     environment:
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
