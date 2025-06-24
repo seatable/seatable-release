@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.3.10}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.3.12}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -29,6 +29,7 @@ services:
       - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}
       - SEATABLE_ADMIN_PASSWORD=${SEATABLE_ADMIN_PASSWORD:?Variable is not set or empty}
       - TIME_ZONE=${TIME_ZONE}
+      - ENABLE_PYTHON_SCRIPT=${ENABLE_PYTHON_SCRIPT:-true}
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
