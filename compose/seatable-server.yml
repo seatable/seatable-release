@@ -46,6 +46,8 @@ services:
       - SEATABLE_LOG_LEVEL=${SEATABLE_LOG_LEVEL:-INFO}
       - ENABLE_SEADOC=${ENABLE_SEADOC:-false}
       - SEADOC_SERVER_URL=${SEADOC_SERVER_URL:-${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}:7070}
+      - ENABLE_SEATABLE_AI=${ENABLE_SEATABLE_AI:-false}
+      - SEATABLE_AI_SERVER_URL=${SEATABLE_AI_SERVER_URL:-http://seatable-ai:8888}
     labels:
       caddy_0: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy_0.reverse_proxy: "{{upstreams 80}}"
