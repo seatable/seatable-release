@@ -1,7 +1,7 @@
 ---
 services:
   seatable-ai:
-    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:1.1.0-testing}
+    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.0.0-testing}
     container_name: seatable-ai
     volumes:
       - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai-data/}:/shared
