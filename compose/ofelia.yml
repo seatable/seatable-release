@@ -1,0 +1,20 @@
+---
+services:
+  ofelia:
+    image: mcuadros/ofelia:0.3.18
+    container_name: ofelia
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - TZ=Europe/Berlin
+    depends_on:
+      - seatable-server
+
+  # Schedule the garbage collector to run once a week, overnight from Saturday to Sunday.
+  seatable-server:
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.gc.command: "/opt/seatable/scripts/seatable.sh gc"
+      ofelia.job-exec.gc.schedule: "@weekly"
+      #ofelia.job-exec.gc.schedule: "0 15 3 * * *"  # ofeila v0.3 still requires seconds!
