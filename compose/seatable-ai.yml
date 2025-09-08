@@ -1,0 +1,45 @@
+---
+services:
+  seatable-ai:
+    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.0.4-testing}
+    container_name: seatable-ai
+    volumes:
+      - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai-data/}:/shared
+    # ports:
+    #   - "8888:8888"
+    environment:
+      - TIME_ZONE=${TIME_ZONE:-Etc/UTC}
+      - SEATABLE_MYSQL_DB_HOST=${SEATABLE_MYSQL_DB_HOST:-mariadb}
+      - SEATABLE_MYSQL_DB_PORT=${SEATABLE_MYSQL_DB_PORT:-3306}
+      - SEATABLE_MYSQL_DB_USER=${SEATABLE_MYSQL_DB_USER:-seatable}
+      - SEATABLE_MYSQL_DB_PASSWORD=${SEATABLE_MYSQL_DB_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_MYSQL_DB_DTABLE_DB_NAME=${SEATABLE_MYSQL_DB_DTABLE_DB_NAME:-dtable_db}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
+      - SEATABLE_SERVER_URL=${SEATABLE_SERVER_URL:-http://seatable-server}
+      - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:-http://seatable-server:5000}
+      - INNER_DTABLE_DB_URL=${INNER_DTABLE_SERVER_URL:-http://seatable-server:7777}
+      - SEATABLE_AI_LLM_TYPE=${SEATABLE_AI_LLM_TYPE:-openai}
+      - SEATABLE_AI_LLM_URL=${SEATABLE_AI_LLM_URL:-}
+      - SEATABLE_AI_LLM_KEY=${SEATABLE_AI_LLM_KEY:-}
+      - SEATABLE_AI_LLM_MODEL=${SEATABLE_AI_LLM_MODEL:-gpt-4.1}
+      - ENABLE_SEARCH=${ENABLE_SEARCH:-false}
+      - SEASEARCH_SERVER_URL=${SEASEARCH_SERVER_URL:-}
+      - SEASEARCH_TOKEN=${SEASEARCH_TOKEN:-}
+    depends_on:
+      - mariadb
+      - redis
+    networks:
+      - backend-seatable-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8888 || exit 1"]
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
+networks:
+  backend-seatable-net:
+    name: backend-seatable-net
