@@ -3,7 +3,7 @@ services:
   ## Web Server / Reverse Proxy
   # Handles TLS termination using either Let's Encrypt or custom certificates
   caddy:
-    image: ${IMAGE_CADDY:-lucaslorentz/caddy-docker-proxy:2.9.2-alpine}
+    image: ${IMAGE_CADDY:-lucaslorentz/caddy-docker-proxy:2.10.0-alpine}
     restart: unless-stopped
     container_name: caddy
     ports:
