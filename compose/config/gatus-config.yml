@@ -14,7 +14,7 @@ storage:
 
 ui:
   header: "SeaTable Health Status (${SEATABLE_SERVER_HOSTNAME})"
-  logo: https://upload.wikimedia.org/wikipedia/commons/b/b7/Logo_word_seatable_vector_vector.svg
+  logo: https://admin.seatable.com/assets/SeaTable256-256.png
 
 alerting:
   email:
