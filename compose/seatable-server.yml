@@ -115,7 +115,7 @@ services:
       timeout: 10s
 
   mariadb:
-    image: ${SEATABLE_DB_IMAGE:-mariadb:11.4.3-noble}
+    image: ${SEATABLE_DB_IMAGE:-mariadb:11.8.3-noble}
     restart: unless-stopped
     container_name: mariadb
     environment:
@@ -146,7 +146,7 @@ services:
       # more info at https://admin.seatable.com/upgrade/extra-upgrade-notice/
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.7-bookworm}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:8.2.1-bookworm}
     restart: unless-stopped
     container_name: redis
     environment:
