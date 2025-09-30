@@ -1,14 +1,13 @@
 ---
 services:
   seatable-ai:
-    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.0.4-testing}
+    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.0.6-testing}
+    restart: unless-stopped
     container_name: seatable-ai
     volumes:
       - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai-data/}:/shared
-    # ports:
-    #   - "8888:8888"
     environment:
-      - TIME_ZONE=${TIME_ZONE:-Etc/UTC}
+      - TIME_ZONE=${TIME_ZONE}
       - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
       - SEATABLE_MYSQL_DB_PORT=${MARIADB_PORT:-3306}
       - SEATABLE_MYSQL_DB_USER=root
@@ -21,10 +20,10 @@ services:
       - SEATABLE_SERVER_URL=${SEATABLE_SERVER_URL:-http://seatable-server}
       - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:-http://seatable-server:5000}
       - INNER_DTABLE_DB_URL=${INNER_DTABLE_SERVER_URL:-http://seatable-server:7777}
-      - SEATABLE_AI_LLM_TYPE=${SEATABLE_AI_LLM_TYPE:-openai}
+      - SEATABLE_AI_LLM_TYPE=${SEATABLE_AI_LLM_TYPE:?Variable is not set or empty}
       - SEATABLE_AI_LLM_URL=${SEATABLE_AI_LLM_URL:-}
       - SEATABLE_AI_LLM_KEY=${SEATABLE_AI_LLM_KEY:-}
-      - SEATABLE_AI_LLM_MODEL=${SEATABLE_AI_LLM_MODEL:-gpt-4o-mini}
+      - SEATABLE_AI_LLM_MODEL=${SEATABLE_AI_LLM_MODEL:?Variable is not set or empty}
       - ENABLE_SEARCH=${ENABLE_SEARCH:-false}
       - SEASEARCH_SERVER_URL=${SEASEARCH_SERVER_URL:-}
       - SEASEARCH_TOKEN=${SEASEARCH_TOKEN:-}
