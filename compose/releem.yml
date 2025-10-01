@@ -1,7 +1,7 @@
 ---
 services:
   releem-agent:
-    image: ${RELEEM_IMAGE:-releem/releem-agent:1.21.3.1}
+    image: ${RELEEM_IMAGE:-releem/releem-agent:1.21.6.1}
     restart: unless-stopped
     container_name: releem-agent
     environment:

@@ -10,7 +10,7 @@ services:
       - SEADOC_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-}://${SEATABLE_SERVER_HOSTNAME:-}:${SEADOC_PORT:-6240}
 
   seadoc:
-    image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:2.0.6}
+    image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:2.0.7}
     container_name: seadoc
     restart: unless-stopped
     volumes:
