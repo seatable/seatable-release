@@ -1,7 +1,7 @@
 ---
 services:
   python-scheduler:
-    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:4.2.2}
+    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:4.2.3}
     restart: unless-stopped
     container_name: python-scheduler
     environment:
@@ -42,7 +42,7 @@ services:
         max-file: 3
 
   python-starter:
-    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:4.2.2}
+    image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:4.2.3}
     restart: unless-stopped
     container_name: python-starter
     volumes:
@@ -51,7 +51,7 @@ services:
     environment:
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
-      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.2}
+      - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.3}
       - PYTHON_STARTER_LOG_LEVEL=${PYTHON_STARTER_LOG_LEVEL:-WARNING}
       - PYTHON_RUNNER_CONTAINER_CPUS=${PYTHON_RUNNER_CONTAINER_CPUS:-1}
       - PYTHON_RUNNER_CONTAINER_MEMORY=${PYTHON_RUNNER_CONTAINER_MEMORY:-1g}
@@ -74,7 +74,7 @@ services:
         max-file: 3
 
   python-runner:
-    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.2}
+    image: ${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:4.2.3}
     restart: unless-stopped
     container_name: python-runner
     networks:
