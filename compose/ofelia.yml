@@ -7,7 +7,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TIME_ZONE}
     depends_on:
       - seatable-server
 
