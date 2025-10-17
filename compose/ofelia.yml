@@ -15,6 +15,10 @@ services:
   seatable-server:
     labels:
       ofelia.enabled: "true"
+      ofelia.job-exec.clean-tmp.command: "find /tmp -type f -mtime +3 -delete"
+      ofelia.job-exec.clean-tmp.schedule: "@weekly"
       ofelia.job-exec.gc.command: "/opt/seatable/scripts/seatable.sh gc"
       ofelia.job-exec.gc.schedule: "@weekly"
+      ofelia.job-exec.seaf-fsck.command: "/opt/seatable/seatable-server-latest/seaf-fsck.sh"
+      ofelia.job-exec.seaf-fsck.schedule: "@weekly"
       #ofelia.job-exec.gc.schedule: "0 15 3 * * *"  # ofeila v0.3 still requires seconds!
