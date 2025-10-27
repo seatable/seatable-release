@@ -148,7 +148,7 @@ services:
       # more info at https://admin.seatable.com/upgrade/extra-upgrade-notice/
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:8.2.1-bookworm}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:8.2.2-bookworm}
     restart: unless-stopped
     container_name: redis
     environment:
