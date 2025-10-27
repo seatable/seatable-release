@@ -120,6 +120,7 @@ services:
     image: ${SEATABLE_DB_IMAGE:-mariadb:11.8.3-noble}
     restart: unless-stopped
     container_name: mariadb
+    command: ["mariadbd", "--innodb_snapshot_isolation=OFF"]
     environment:
       - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-${MARIADB_PASSWORD}}
       - MYSQL_LOG_CONSOLE=true
