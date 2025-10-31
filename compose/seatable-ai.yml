@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     container_name: seatable-ai
     volumes:
-      - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai-data/}:/shared
+      - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai/}:/shared
     environment:
       - TIME_ZONE=${TIME_ZONE}
       - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
@@ -19,7 +19,7 @@ services:
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - SEATABLE_SERVER_URL=${SEATABLE_SERVER_URL:-http://seatable-server}
       - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:-http://seatable-server:5000}
-      - INNER_DTABLE_DB_URL=${INNER_DTABLE_SERVER_URL:-http://seatable-server:7777}
+      - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:-http://seatable-server:7777}
       - SEATABLE_AI_LLM_TYPE=${SEATABLE_AI_LLM_TYPE:?Variable is not set or empty}
       - SEATABLE_AI_LLM_URL=${SEATABLE_AI_LLM_URL:-}
       - SEATABLE_AI_LLM_KEY=${SEATABLE_AI_LLM_KEY:-}

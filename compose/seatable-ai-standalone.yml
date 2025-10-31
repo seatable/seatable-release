@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     container_name: seatable-ai
     volumes:
-      - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai-data/}:/shared
+      - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai/}:/shared
     ports:
       - "8888:8888"
     environment:
@@ -21,7 +21,7 @@ services:
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - SEATABLE_SERVER_URL=${SEATABLE_SERVER_URL:?Variable is not set or empty}
       - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:?Variable is not set or empty}
-      - INNER_DTABLE_DB_URL=${INNER_DTABLE_SERVER_URL:?Variable is not set or empty}
+      - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:?Variable is not set or empty}
       - SEATABLE_AI_LLM_TYPE=${SEATABLE_AI_LLM_TYPE:?Variable is not set or empty}
       - SEATABLE_AI_LLM_URL=${SEATABLE_AI_LLM_URL:-}
       - SEATABLE_AI_LLM_KEY=${SEATABLE_AI_LLM_KEY:-}
