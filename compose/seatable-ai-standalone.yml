@@ -1,7 +1,7 @@
 ---
 services:
   seatable-ai:
-    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.0.6}
+    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.0.8}
     restart: unless-stopped
     container_name: seatable-ai
     volumes:
