@@ -5,7 +5,6 @@ set -euo pipefail
 source /opt/seatable-compose/.env
 
 LICENSE_FILE="/opt/seatable-compose/seatable-license.txt"
-LICENSE_FILE="seatable-license.txt"
 
 USER_LIMIT=$(grep -Po '(?<=MaxUsers = \")(\d+)' ${LICENSE_FILE})
 echo "User limit according to license file: ${USER_LIMIT}"
