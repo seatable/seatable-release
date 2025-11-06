@@ -26,7 +26,7 @@ services:
       #ofelia.job-exec.gc.schedule: "0 15 3 * * *"  # ofeila v0.3 still requires seconds!
       
       # filesystem check
-      ofelia.job-exec.seaf-fsck.command: "/opt/seatable/seatable-server-latest/seaf-fsck.sh | grep -E 'corrupted|missing|finished'"
+      ofelia.job-exec.seaf-fsck.command: "/opt/seatable/seatable-server-latest/seaf-fsck.sh | grep -E 'corrupted|damaged|missing|finished'"
       ofelia.job-exec.seaf-fsck.schedule: "@weekly"
 
       
