@@ -10,7 +10,7 @@ echo "********************"
 
 # Set the file path variable for dtable_web_settings.py
 SETTINGS_FILE="/opt/seatable-server/seatable/conf/dtable_web_settings.py"
-LIMIT_LDAP_ENTRIES=10
+LIMIT_LDAP_ENTRIES=3
 
 # Check if the settings file exists
 if [[ ! -f "$SETTINGS_FILE" ]]; then
