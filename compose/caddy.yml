@@ -26,4 +26,4 @@ services:
 networks:
   frontend-net:
     name: frontend-net
-    enable_ipv6: true
+    enable_ipv6: ${ENABLE_IPV6:-true}
