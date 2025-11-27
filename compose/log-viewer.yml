@@ -1,0 +1,43 @@
+---
+services:
+  caddy:
+    ports:
+      - 6241:6241
+
+  seatable-logs:
+    image: sumologic/tailing-sidecar:0.18.1
+    container_name: seatable-logs
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=warning
+      - PATH_TO_TAIL=/seatable-logs/*.log,/seatable-logs/slow_logs/*.log
+    volumes:
+      - /opt/seatable-server/seatable/logs:/seatable-logs
+      - /opt/logs-fluentbit-db:/tailing-sidecar/var
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/dozzle:/data
+    labels:
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:6241
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    environment:
+      DOZZLE_NO_ANALYTICS: true
+      #DOZZLE_FILTER: name=seatable-logs
+      DOZZLE_AUTH_PROVIDER: simple
+      # create new users with:
+      # docker run -it --rm amir20/dozzle generate --name <name> --email <email> --password <password> <login>
+    healthcheck:
+      test: ["CMD", "/dozzle", "healthcheck"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      - seatable-logs
+    networks:
+      - frontend-net
