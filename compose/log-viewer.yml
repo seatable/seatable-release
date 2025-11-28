@@ -14,6 +14,13 @@ services:
     volumes:
       - /opt/seatable-server/seatable/logs:/seatable-logs
       - /opt/logs-fluentbit-db:/tailing-sidecar/var
+    logging:
+      driver: json-file
+      options:
+        # Maximum size per file
+        max-size: 10m
+        # Maximum number of files
+        max-file: 10
 
   dozzle:
     image: amir20/dozzle:latest
