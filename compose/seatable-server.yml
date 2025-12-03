@@ -49,7 +49,7 @@ services:
       - SEATABLE_LOG_LEVEL=${SEATABLE_LOG_LEVEL:-INFO}
       - ENABLE_SEATABLE_AI=${ENABLE_SEATABLE_AI:-false}
       - SEATABLE_AI_SERVER_URL=${SEATABLE_AI_SERVER_URL:-http://seatable-ai:8888}
-      - SEAF_SERVER_STORAGE_TYPE=${SEAF_SERVER_STORAGE_TYPE:-}
+      - STORAGE_TYPE=${STORAGE_TYPE:-}
       - S3_STORAGE_BUCKET=${S3_STORAGE_BUCKET:-}
       - S3_COMMIT_BUCKET=${S3_COMMIT_BUCKET:-}
       - S3_FS_BUCKET=${S3_FS_BUCKET:-}
@@ -62,6 +62,7 @@ services:
       - S3_USE_HTTPS=${S3_USE_HTTPS:-true}
       - S3_PATH_STYLE_REQUEST=${S3_PATH_STYLE_REQUEST:-false}
       - S3_SSE_C_KEY=${S3_SSE_C_KEY:-}
+      - S3_PART_SIZE=${S3_PART_SIZE:-}
     labels:
       caddy_0: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy_0.reverse_proxy: "{{upstreams 80}}"
