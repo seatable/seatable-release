@@ -1,0 +1,51 @@
+---
+services:
+  caddy:
+    ports:
+      - 6241:6241
+
+  seatable-logs:
+    image: sumologic/tailing-sidecar:0.18.1
+    container_name: seatable-logs
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=warning
+      - PATH_TO_TAIL=/seatable-logs/*.log,/seatable-logs/slow_logs/*.log
+    volumes:
+      - /opt/seatable-server/seatable/logs:/seatable-logs
+      - /opt/logs-fluentbit-db:/tailing-sidecar/var
+    logging:
+      driver: json-file
+      options:
+        # Maximum size per file and maximum number of files
+        max-size: 10m
+        max-file: 10
+
+  dozzle:
+    image: amir20/dozzle:v8.14.10
+    container_name: dozzle
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/dozzle:/data
+    labels:
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:6241
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    environment:
+      #DOZZLE_FILTER: name=seatable-logs
+      DOZZLE_NO_ANALYTICS: true
+      # Authentifizierung per Dozzle Auth, create an admin login with:
+      # export DOZZLE_PASSWORD=`pwgen -c 40 1`
+      # docker run -it --rm amir20/dozzle generate --name DozzleAdmin --email dozzleadmin@example.com --password ${DOZZLE_PASSWORD} dozzleadmin > /opt/dozzle/users.yaml
+      # echo 'Now you can login to dozzle with `dozzleadmin` + `'${DOZZLE_PASSWORD}'`'
+      DOZZLE_AUTH_PROVIDER: simple
+    healthcheck:
+      test: ["CMD", "/dozzle", "healthcheck"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      - seatable-logs
+    networks:
+      - frontend-net
