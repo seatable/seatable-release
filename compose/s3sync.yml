@@ -27,7 +27,7 @@ services:
       - B6_TO=${B6_TO:-}
       # Size Check after sync, sharded sync and healthcheck
       - ALLOWED_DEVIATION=${ALLOWED_DEVIATION:-1}
-      - SKIP_SIZE_CHECK=${SKIP_SIZE_CHECK:-true}
+      - SKIP_SIZE_CHECK=${SKIP_SIZE_CHECK:-false}
       - SHARDED_SYNC=${SHARDED_SYNC:-false}
       - HEALTHCHECK_URL=${RCLONE_HEALTHCHECK_URL:-}
       # rclone parameters
