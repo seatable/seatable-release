@@ -1,0 +1,61 @@
+---
+services:
+  s3sync:
+    image: ${SEATABLE_S3SYNC_BACKUP_IMAGE:-seatable/s3sync-backup:latest}
+    container_name: s3sync
+    restart: unless-stopped
+    init: true
+    volumes:
+      - ./rclone.conf:/root/.config/rclone/rclone.conf:ro
+    environment:
+      - S3_BACKUP_CRON=${S3_BACKUP_CRON:-15 3 * * *} # Start backup always at 3:15 am.
+      - RUN_MODE=${RUN_MODE:-cron}
+      - TZ=${TIME_ZONE:?Variable is not set or empty}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      # buckets to sync
+      - B1_FROM=${B1_FROM}
+      - B1_TO=${B1_TO}
+      - B2_FROM=${B2_FROM:-}
+      - B2_TO=${B2_TO:-}
+      - B3_FROM=${B3_FROM:-}
+      - B3_TO=${B3_TO:-}
+      - B4_FROM=${B4_FROM:-}
+      - B4_TO=${B4_TO:-}
+      - B5_FROM=${B5_FROM:-}
+      - B5_TO=${B5_TO:-}
+      - B6_FROM=${B6_FROM:-}
+      - B6_TO=${B6_TO:-}
+      # Size Check after sync, sharded sync and healthcheck
+      - ALLOWED_DEVIATION=${ALLOWED_DEVIATION:-1}
+      - SKIP_SIZE_CHECK=${SKIP_SIZE_CHECK:-true}
+      - SHARDED_SYNC=${SHARDED_SYNC:-false}
+      - HEALTHCHECK_URL=${RCLONE_HEALTHCHECK_URL:-}
+      # rclone parameters
+      - RCLONE_LOG_LEVEL=${RCLONE_LOG_LEVEL:-NOTICE}
+      - RCLONE_STATS_LOG_LEVEL=${RCLONE_STATS_LOG_LEVEL:-NOTICE}
+      - RCLONE_STATS=${RCLONE_STATS:-60s}
+      - RCLONE_STATS_ONE_LINE=${RCLONE_STATS_ONE_LINE:-true}
+      - RCLONE_CHECKSUM=${RCLONE_CHECKSUM:-true}
+      - RCLONE_FAST_LIST=${RCLONE_FAST_LIST:-true}
+      - RCLONE_TRANSFERS=${RCLONE_TRANSFERS:-16}
+      - RCLONE_CHECKERS=${RCLONE_CHECKERS:-64}
+      - RCLONE_BUFFER_SIZE=${RCLONE_BUFFER_SIZE:-8M}
+      - RCLONE_SKIP_LINKS=${RCLONE_SKIP_LINKS:-true}
+      - RCLONE_S3_NO_CHECK_BUCKET=${RCLONE_S3_NO_CHECK_BUCKET:-true}
+      - RCLONE_USE_MMAP=${RCLONE_USE_MMAP:-true}
+      - RCLONE_MODIFY_WINDOW=${RCLONE_MODIFY_WINDOW:-1s}
+      - RCLONE_TPSLIMIT=${RCLONE_TPSLIMIT:-0}
+      - RCLONE_TPSLIMIT_BURST=${RCLONE_TPSLIMIT_BURST:-1}
+      - RCLONE_LIST_CUTOFF=${RCLONE_LIST_CUTOFF:-1000000}
+      - RCLONE_S3_NO_HEAD=${RCLONE_S3_NO_HEAD:-true}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
