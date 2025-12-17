@@ -8,10 +8,10 @@ services:
     volumes:
       - ./rclone.conf:/root/.config/rclone/rclone.conf:ro
     environment:
-      - S3_BACKUP_CRON=${S3_BACKUP_CRON:-15 3 * * *} # Start backup always at 3:15 am.
-      - RUN_MODE=${RUN_MODE:-cron}
+      - BACKUP_CRON=${S3SYNC_BACKUP_CRON:-15 3 * * *} # Start backup always at 3:15 am.
+      - RUN_MODE=${S3SYNC_RUN_MODE:-cron}
+      - LOG_LEVEL=${S3SYNC_LOG_LEVEL:-INFO}
       - TZ=${TIME_ZONE:?Variable is not set or empty}
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
       # buckets to sync
       - B1_FROM=${B1_FROM}
       - B1_TO=${B1_TO}
@@ -29,7 +29,7 @@ services:
       - ALLOWED_DEVIATION=${ALLOWED_DEVIATION:-1}
       - SKIP_SIZE_CHECK=${SKIP_SIZE_CHECK:-false}
       - SHARDED_SYNC=${SHARDED_SYNC:-false}
-      - HEALTHCHECK_URL=${RCLONE_HEALTHCHECK_URL:-}
+      - HEALTHCHECK_URL=${S3SYNC_HEALTHCHECK_URL:-}
       # rclone parameters
       - RCLONE_LOG_LEVEL=${RCLONE_LOG_LEVEL:-NOTICE}
       - RCLONE_STATS_LOG_LEVEL=${RCLONE_STATS_LOG_LEVEL:-NOTICE}
