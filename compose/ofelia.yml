@@ -21,7 +21,7 @@ services:
       ofelia.job-exec.clean-tmp.schedule: "@weekly"
       
       # garbage collector
-      ofelia.job-exec.gc.command: "/opt/seatable/scripts/seatable.sh gc | grep -E 'damaged|removed|finished'"
+      ofelia.job-exec.gc.command: "/opt/seatable/scripts/seatable.sh gc --rm-fs | grep -E 'damaged|removed|finished'"
       ofelia.job-exec.gc.schedule: "@weekly"
       #ofelia.job-exec.gc.schedule: "0 15 3 * * *"  # ofeila v0.3 still requires seconds!
       
