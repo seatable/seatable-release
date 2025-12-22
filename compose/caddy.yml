@@ -22,6 +22,13 @@ services:
       interval: 20s
       timeout: 5s
       retries: 3
+    labels:
+      # Expose per-host metrics on port 2020
+      # Source: https://github.com/lucaslorentz/caddy-docker-proxy/issues/613
+      caddy_0.metrics:
+      caddy_0.metrics.per_host:
+      caddy_1: ":2020"
+      caddy_1.metrics: /metrics
 
 networks:
   frontend-net:
