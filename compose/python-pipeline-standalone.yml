@@ -1,7 +1,7 @@
 ---
 services:
   mariadb:
-    image: ${SEATABLE_DB_IMAGE:-mariadb:11.4.3-noble}
+    image: ${SEATABLE_DB_IMAGE:-mariadb:11.8.5-noble}
     restart: unless-stopped
     container_name: mariadb
     environment:
