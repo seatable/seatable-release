@@ -158,7 +158,7 @@ services:
     command:
       - /bin/sh
       - -c
-      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}" --maxmemory "${REDIS_MAX_MEMORY:-500mb}" --maxmemory-policy allkeys-lru
     networks:
       - backend-seatable-net
     healthcheck:
