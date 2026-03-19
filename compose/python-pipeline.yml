@@ -82,6 +82,11 @@ services:
       # Docker-Compose does not seem to create networks that are not used by any containers in the compose file(s)
       - runner-net
 
+  # Override ENABLE_PYTHON_SCRIPT for seatable-server
+  seatable-server:
+    environment:
+      - ENABLE_PYTHON_SCRIPT=true
+
 networks:
   frontend-net:
     name: frontend-net
