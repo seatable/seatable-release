@@ -45,7 +45,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
       - name: vaildate yml files
-        uses: mikefarah/yq@master
+        uses: mikefarah/yq@v4
         with:
           cmd: yq 'true' compose/*.yml
 
