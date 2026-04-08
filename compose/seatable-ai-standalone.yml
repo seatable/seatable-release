@@ -1,7 +1,7 @@
 ---
 services:
   seatable-ai:
-    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.1.8}
+    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.2.0}
     restart: unless-stopped
     container_name: seatable-ai
     volumes:
@@ -19,6 +19,9 @@ services:
       - REDIS_PORT=${REDIS_PORT:-6379}
       - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
+      - SEATABLE_SERVER_URL=${SEATABLE_SERVER_URL:?Variable is not set or empty}
+      - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:?Variable is not set or empty}
+      - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:?Variable is not set or empty}
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8888 || exit 1"]
       interval: 20s
