@@ -42,7 +42,7 @@ services:
       - frontend-net
       - backend-seatable-net
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8088 || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8088/ping || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
