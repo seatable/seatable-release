@@ -92,6 +92,8 @@ services:
       caddy_0.route_4.header.-Content-Security-Policy: ""
       caddy_0.route_5: /external-apps/*
       caddy_0.route_5.header.-Content-Security-Policy: ""
+      caddy_0.route_6: /dtable/external-apps-edit/*
+      caddy_0.route_6.header.-Content-Security-Policy: ""
 
       caddy_1: ":80"
       caddy_1.@http.protocol: "http"
