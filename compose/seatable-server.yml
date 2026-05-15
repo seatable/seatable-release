@@ -81,22 +81,16 @@ services:
         `"
       # Allow iframes for some directories
       caddy_0.route_0: /dtable/view-external-links/*
-      caddy_0.route_0.header.X-Frame-Options: "ALLOWALL"
       caddy_0.route_0.header.-Content-Security-Policy: ""
       caddy_0.route_1: /dtable/external-links/*
-      caddy_0.route_1.header.X-Frame-Options: "ALLOWALL"
       caddy_0.route_1.header.-Content-Security-Policy: ""
       caddy_0.route_2: /dtable/external-apps/*
-      caddy_0.route_2.header.X-Frame-Options: "ALLOWALL"
       caddy_0.route_2.header.-Content-Security-Policy: ""
       caddy_0.route_3: /dtable/forms/*
-      caddy_0.route_3.header.X-Frame-Options: "ALLOWALL"
       caddy_0.route_3.header.-Content-Security-Policy: ""
       caddy_0.route_4: /apps/custom/*
-      caddy_0.route_4.header.X-Frame-Options: "ALLOWALL"
       caddy_0.route_4.header.-Content-Security-Policy: ""
       caddy_0.route_5: /external-apps/*
-      caddy_0.route_5.header.X-Frame-Options: "ALLOWALL"
       caddy_0.route_5.header.-Content-Security-Policy: ""
 
       caddy_1: ":80"
