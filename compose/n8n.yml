@@ -5,7 +5,7 @@ services:
       - ${N8N_PORT:-6231}:${N8N_PORT:-6231}
 
   n8n-postgres:
-    image: ${N8N_POSTGRES_IMAGE:-postgres:11}
+    image: ${N8N_POSTGRES_IMAGE:-postgres:16}
     restart: unless-stopped
     container_name: n8n-postgres
     environment:
@@ -30,7 +30,7 @@ services:
       - backend-n8n-net
 
   n8n:
-    image: ${N8N_IMAGE:-docker.n8n.io/n8nio/n8n:2.12.3}
+    image: ${N8N_IMAGE:-docker.n8n.io/n8nio/n8n:2.20.9}
     restart: unless-stopped
     container_name: n8n
     environment:
