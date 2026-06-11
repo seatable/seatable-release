@@ -26,6 +26,24 @@ services:
       start_period: 30s
       timeout: 10s
 
+  redis:
+    image: ${SEATABLE_REDIS_IMAGE:-redis:8.4.0-bookworm}
+    restart: unless-stopped
+    container_name: redis
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}" --maxmemory "${REDIS_MAX_MEMORY:-500mb}" --maxmemory-policy allkeys-lru
+    networks:
+      - backend-scheduler-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 20s
+      retries: 3
+      timeout: 5s
+
   python-scheduler:
     image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:6.1.0}
     restart: unless-stopped
@@ -34,11 +52,16 @@ services:
       - TIME_ZONE=${TIME_ZONE}
       - DB_HOST=${SEATABLE_MYSQL_HOST:-mariadb}
       - DB_ROOT_PASSWD=${MARIADB_PASSWORD:?Variable is not set or empty}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
       - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:?Variable is not set or empty}
       - SEATABLE_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME}
-      - PYTHON_STARTER_URL=${PYTHON_STARTER_URL:-http://python-starter:8080}
       - PYTHON_SCHEDULER_LOG_LEVEL=${PYTHON_SCHEDULER_LOG_LEVEL:-WARNING}
       - DELETE_LOG_DAYS=${DELETE_LOG_DAYS:-30}
+      - PYTHON_SCHEDULER_WINDOW_SECS=${PYTHON_SCHEDULER_WINDOW_SECS:-300}
+      - PYTHON_SCHEDULER_RATE_LIMIT_PERCENT=${PYTHON_SCHEDULER_RATE_LIMIT_PERCENT:-0.25}
+      - PYTHON_STARTER_TOTAL_THREAD_COUNT=${PYTHON_STARTER_TOTAL_THREAD_COUNT:-10}
       # Timeout is defined in seconds
       - PYTHON_PROCESS_TIMEOUT=${PYTHON_PROCESS_TIMEOUT:-60}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
@@ -77,6 +100,9 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
     environment:
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_TRANSFER_DIRECTORY=${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}
       - PYTHON_RUNNER_IMAGE=${PYTHON_RUNNER_IMAGE:-seatable/seatable-python-runner:6.1.0}
