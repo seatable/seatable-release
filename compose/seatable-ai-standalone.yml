@@ -1,11 +1,11 @@
 ---
 services:
   seatable-ai:
-    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.1.8}
+    image: ${SEATABLE_AI_IMAGE:-seatable/seatable-ai:6.2.9-testing}
     restart: unless-stopped
     container_name: seatable-ai
     volumes:
-      - ${SEATABLE_AI_VOLUME:-/opt/seatable-ai/}:/shared
+      - /opt/seatable-server:/shared
     ports:
       - "8888:8888"
     environment:
@@ -22,14 +22,7 @@ services:
       - SEATABLE_SERVER_URL=${SEATABLE_SERVER_URL:?Variable is not set or empty}
       - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:?Variable is not set or empty}
       - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:?Variable is not set or empty}
-      - SEATABLE_AI_LLM_TYPE=${SEATABLE_AI_LLM_TYPE:?Variable is not set or empty}
-      - SEATABLE_AI_LLM_URL=${SEATABLE_AI_LLM_URL:-}
-      - SEATABLE_AI_LLM_KEY=${SEATABLE_AI_LLM_KEY:-}
-      - SEATABLE_AI_LLM_MODEL=${SEATABLE_AI_LLM_MODEL:?Variable is not set or empty}
       - SEATABLE_AI_LLM_TIMEOUT=${SEATABLE_AI_LLM_TIMEOUT:-180}
-      - ENABLE_SEARCH=${ENABLE_SEARCH:-false}
-      - SEASEARCH_SERVER_URL=${SEASEARCH_SERVER_URL:-}
-      - SEASEARCH_TOKEN=${SEASEARCH_TOKEN:-}
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8888 || exit 1"]
       interval: 20s
