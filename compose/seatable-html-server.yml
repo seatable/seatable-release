@@ -1,8 +1,8 @@
 services:
-  app-server:
+  seatable-html-server:
     image: ${APP_SERVER_IMAGE:-seatable/custom-app-server:6.2.10-testing}
     restart: unless-stopped
-    container_name: app-server
+    container_name: seatable-html-server
     volumes:
       - /opt/seatable-server:/shared
     environment:
