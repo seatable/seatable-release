@@ -22,7 +22,7 @@ services:
       - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:-http://seatable-server:7777}
       - DTABLE_WEB_SERVICE_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       - NON_ROOT=${NON_ROOT:-false}
-      - SEATABLE_LOG_TO_STDOUT=${LOG_TO_STDOUT:-false}
+      - SEATABLE_LOG_TO_STDOUT=true
     depends_on:
       mariadb:
         condition: service_healthy
