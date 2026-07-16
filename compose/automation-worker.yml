@@ -1,13 +1,14 @@
+---
 services:
   automation-worker:
-    image: ${APP_SERVER_IMAGE:-seatable/automation-worker:7.0.0}
+    image: ${AUTOMATION_WORKER_IMAGE:-seatable/automation-worker:7.0.0}
     restart: unless-stopped
     container_name: automation-worker
     volumes:
       - ${SEATABLE_VOLUMES:-/opt/seatable-server}:/shared
     environment:
       - SEATABLE_LOG_TO_STDOUT=${LOG_TO_STDOUT:-false}
-      - NON_ROOT==${NON_ROOT:-false}
+      - NON_ROOT=${NON_ROOT:-false}
       - TZ=${TIME_ZONE:-UTC}
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
@@ -38,7 +39,7 @@ services:
       mariadb:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     networks:
       - backend-seatable-net
 
