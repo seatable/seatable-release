@@ -1,6 +1,6 @@
 services:
   seatable-html-server:
-    image: ${SEATABLE_HTML_SERVER_IMAGE:-seatable/custom-app-server:6.2.10-testing}
+    image: ${SEATABLE_HTML_SERVER_IMAGE:-seatable/custom-app-server:6.2.10}
     restart: unless-stopped
     container_name: seatable-html-server
     volumes:

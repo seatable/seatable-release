@@ -1,7 +1,7 @@
 ---
 services:
   ofelia:
-    image: mcuadros/ofelia:0.3.18
+    image: mcuadros/ofelia:0.3.22
     container_name: ofelia
     command: daemon --docker
     volumes:
