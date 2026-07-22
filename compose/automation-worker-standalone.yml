@@ -37,3 +37,6 @@ services:
       - S3_SSE_C_KEY=${S3_SSE_C_KEY:-}
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       - SEATABLE_SERVER_PROTOCOL=${SEATABLE_SERVER_PROTOCOL:-https}
+      - INNER_DTABLE_WEB_SERVICE_URL=${INNER_DTABLE_WEB_SERVICE_URL:?Variable is not set or empty}
+      - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:?Variable is not set or empty}
+      - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:?Variable is not set or empty}

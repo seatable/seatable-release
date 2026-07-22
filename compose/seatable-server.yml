@@ -124,7 +124,7 @@ services:
     volumes:
       - "/opt/seatable-server:/shared"
     environment:
-      - TIME_ZONE=${TIME_ZONE}
+      - TZ=${TIME_ZONE}
       - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
       - SEATABLE_MYSQL_DB_PORT=${MARIADB_PORT:-3306}
       - SEATABLE_MYSQL_DB_USER=root
@@ -136,11 +136,6 @@ services:
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - INNER_DTABLE_WEB_SERVICE_URL=${INNER_DTABLE_WEB_SERVICE_URL:-http://seatable-server:8000}
       - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:-http://seatable-server:7777}
-      - INNER_DTABLE_STORAGE_SERVER_URL=${INNER_DTABLE_STORAGE_SERVER_URL:-http://seatable-server:6666}
-    labels:
-      caddy: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME}
-      caddy.handle_path: /dtable-server/*
-      caddy.handle_path.6_reverse_proxy: "{{upstreams 5000}}"
     depends_on:
       mariadb:
         condition: service_healthy
@@ -150,7 +145,7 @@ services:
       - frontend-net
       - backend-seatable-net
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:5000 || exit 1"]
+      test: ["CMD-SHELL", "curl --fail http://localhost:5000/ping || exit 1"]
       interval: 20s
       retries: 3
       start_period: 30s
