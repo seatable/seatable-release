@@ -1,7 +1,7 @@
 ---
 services:
   python-scheduler:
-    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:6.2.1}
+    image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:6.2.2}
     restart: unless-stopped
     container_name: python-scheduler
     environment:
