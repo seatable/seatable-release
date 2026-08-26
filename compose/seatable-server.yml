@@ -52,6 +52,7 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - ENABLE_SEATABLE_AI=${ENABLE_SEATABLE_AI:-false}
       - INNER_SEATABLE_AI_SERVER_URL=${INNER_SEATABLE_AI_SERVER_URL:-http://seatable-ai:8888}
+      - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:-http://dtable-server:5000}
     labels:
       caddy_0: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy_0.reverse_proxy: "{{upstreams 80}}"
@@ -117,6 +118,40 @@ services:
     # healthcheck specifically for dtable-web
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
+  dtable-server:
+    image: ${DTABLE_SERVER_IMAGE:-seatable/dtable-server-js:7.0.0-testing}
+    restart: unless-stopped
+    container_name: dtable-server
+    volumes:
+      - "/opt/seatable-server:/shared"
+    environment:
+      - TZ=${TIME_ZONE}
+      - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
+      - SEATABLE_MYSQL_DB_PORT=${MARIADB_PORT:-3306}
+      - SEATABLE_MYSQL_DB_USER=root
+      - SEATABLE_MYSQL_DB_PASSWORD=${MARIADB_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_MYSQL_DB_DTABLE_DB_NAME=dtable_db
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
+      - INNER_DTABLE_WEB_SERVICE_URL=${INNER_DTABLE_WEB_SERVICE_URL:-http://seatable-server:8000}
+      - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:-http://seatable-server:7777}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - frontend-net
+      - backend-seatable-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5000/ping || exit 1"]
       interval: 20s
       retries: 3
       start_period: 30s
