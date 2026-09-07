@@ -1,0 +1,41 @@
+services:
+  automation-worker:
+    image: ${AUTOMATION_WORKER_IMAGE:-}
+    restart: unless-stopped
+    container_name: automation-worker
+    volumes:
+      - /opt/seatable-server:/shared
+    environment:
+      - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
+      - SEATABLE_MYSQL_DB_PORT=${MARIADB_PORT:-3306}
+      - SEATABLE_MYSQL_DB_USER=root
+      - SEATABLE_MYSQL_DB_PASSWORD=${MARIADB_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_MYSQL_DB_DTABLE_DB_NAME=dtable_db
+      - SEATABLE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+      - SEATABLE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
+      - SECRET_KEY=${SECRET_KEY:?Variable is not set or empty}
+      - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
+      - SEATABLE_SERVER_PROTOCOL=${SEATABLE_SERVER_PROTOCOL:-https}
+      - TZ=${TIME_ZONE:?Variable is not set or empty}
+      - INNER_DTABLE_WEB_SERVICE_URL=${INNER_DTABLE_WEB_SERVICE_URL:-http://seatable-server:80}
+      - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:-http://dtable-server:5000}
+      - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:-http://seatable-server:7777}
+      - ENABLE_PYTHON_SCRIPT=${ENABLE_PYTHON_SCRIPT:-false}
+      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
+      - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-}
+      - ENABLE_SEATABLE_AI=${ENABLE_SEATABLE_AI:-false}
+      - INNER_SEATABLE_AI_SERVER_URL=${INNER_SEATABLE_AI_SERVER_URL:-http://seatable-ai:8888}
+      - SEATABLE_LOG_TO_STDOUT=true
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - STORAGE_TYPE=disk
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend-seatable-net

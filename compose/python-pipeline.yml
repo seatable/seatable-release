@@ -91,8 +91,12 @@ services:
       # Docker-Compose does not seem to create networks that are not used by any containers in the compose file(s)
       - runner-net
 
-  # Override ENABLE_PYTHON_SCRIPT for seatable-server
+  # Override ENABLE_PYTHON_SCRIPT for seatable-server and automation-worker
   seatable-server:
+    environment:
+      - ENABLE_PYTHON_SCRIPT=true
+
+  automation-worker:
     environment:
       - ENABLE_PYTHON_SCRIPT=true
 

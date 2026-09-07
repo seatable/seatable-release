@@ -52,6 +52,7 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - ENABLE_SEATABLE_AI=${ENABLE_SEATABLE_AI:-false}
       - INNER_SEATABLE_AI_SERVER_URL=${INNER_SEATABLE_AI_SERVER_URL:-http://seatable-ai:8888}
+      - INNER_DTABLE_SERVER_URL=http://dtable-server:5000
     labels:
       caddy_0: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy_0.reverse_proxy: "{{upstreams 80}}"
@@ -126,7 +127,7 @@ services:
     image: ${SEATABLE_DB_IMAGE:-mariadb:11.8.5-noble}
     restart: unless-stopped
     container_name: mariadb
-    command: ["mariadbd", "--innodb_snapshot_isolation=OFF"]
+    command: ["mariadbd", "--innodb_snapshot_isolation=OFF", "--max-allowed-packet=32M"]
     environment:
       - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-${MARIADB_PASSWORD}}
       - MYSQL_LOG_CONSOLE=true
