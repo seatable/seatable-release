@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:6.2.13}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:6.2.15}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
