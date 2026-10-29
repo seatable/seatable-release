@@ -59,7 +59,7 @@ services:
       # Default security headers
       caddy_0.header.Strict-Transport-Security: "`max-age=31536000; includeSubdomains; preload`"
       caddy_0.header.Referrer-Policy: "same-origin"
-      caddy_0.header.X-XSS-Protection: "`1; mode=block`"
+      caddy_0.header.X-XSS-Protection: "0"
       caddy_0.header.X-Content-Type-Options: "nosniff"
       caddy_0.header.X-Frame-Options: "SAMEORIGIN"
       caddy_0.header.Content-Security-Policy: "`
