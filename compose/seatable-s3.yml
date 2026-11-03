@@ -22,5 +22,5 @@ services:
   dtable-server:
     environment: *seatable-s3-variables
 
-  automation-worker:
+  seatable-automation-worker:
     environment: *seatable-s3-variables

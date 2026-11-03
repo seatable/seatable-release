@@ -1,8 +1,8 @@
 services:
-  automation-worker:
-    image: ${AUTOMATION_WORKER_IMAGE:-}
+  seatable-automation-worker:
+    image: ${SEATABLE_AUTOMATION_WORKER_IMAGE:-}
     restart: unless-stopped
-    container_name: automation-worker
+    container_name: seatable-automation-worker
     volumes:
       - /opt/seatable-server:/shared
     environment:
