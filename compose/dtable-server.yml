@@ -24,7 +24,7 @@ services:
       - TZ=${TIME_ZONE:?Variable is not set or empty}
       - INNER_DTABLE_WEB_SERVICE_URL=${INNER_DTABLE_WEB_SERVICE_URL:-http://seatable-server:80}
       - INNER_DTABLE_DB_URL=${INNER_DTABLE_DB_URL:-http://seatable-server:7777}
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DTABLE_SERVER_LOG_LEVEL=${LOG_LEVEL:-INFO}
     depends_on:
       mariadb:
         condition: service_healthy
