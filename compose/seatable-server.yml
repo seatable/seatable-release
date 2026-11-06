@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:6.2.15}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:7.0.13}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -52,6 +52,7 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - ENABLE_SEATABLE_AI=${ENABLE_SEATABLE_AI:-false}
       - INNER_SEATABLE_AI_SERVER_URL=${INNER_SEATABLE_AI_SERVER_URL:-http://seatable-ai:8888}
+      - INNER_DTABLE_SERVER_URL=${INNER_DTABLE_SERVER_URL:-http://dtable-server:5000}
     labels:
       caddy_0: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy_0.reverse_proxy: "{{upstreams 80}}"
@@ -59,10 +60,9 @@ services:
       # Default security headers
       caddy_0.header.Strict-Transport-Security: "`max-age=31536000; includeSubdomains; preload`"
       caddy_0.header.Referrer-Policy: "same-origin"
-      caddy_0.header.X-XSS-Protection: "`1; mode=block`"
+      caddy_0.header.X-XSS-Protection: "0"
       caddy_0.header.X-Content-Type-Options: "nosniff"
       caddy_0.header.X-Frame-Options: "SAMEORIGIN"
-      caddy_0.header.Set-Cookie: '(.*) "$1; SameSite=None; Secure"'
       caddy_0.header.Content-Security-Policy: "`
         block-all-mixed-content;
         default-src 'none';
@@ -124,10 +124,10 @@ services:
       timeout: 10s
 
   mariadb:
-    image: ${SEATABLE_DB_IMAGE:-mariadb:11.8.5-noble}
+    image: ${SEATABLE_DB_IMAGE:-mariadb:11.8.9-noble}
     restart: unless-stopped
     container_name: mariadb
-    command: ["mariadbd", "--innodb_snapshot_isolation=OFF"]
+    command: ["mariadbd", "--innodb_snapshot_isolation=OFF", "--max-allowed-packet=32M"]
     environment:
       - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-${MARIADB_PASSWORD}}
       - MYSQL_LOG_CONSOLE=true
@@ -156,7 +156,7 @@ services:
       # more info at https://admin.seatable.com/upgrade/extra-upgrade-notice/
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:8.4.0-bookworm}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:8.4.8-trixie}
     restart: unless-stopped
     container_name: redis
     environment:
