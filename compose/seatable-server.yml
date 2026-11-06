@@ -56,6 +56,7 @@ services:
     labels:
       caddy_0: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy_0.reverse_proxy: "{{upstreams 80}}"
+      caddy_0.encode: "zstd gzip"
       # Default security headers
       caddy_0.header.Strict-Transport-Security: "`max-age=31536000; includeSubdomains; preload`"
       caddy_0.header.Referrer-Policy: "same-origin"
