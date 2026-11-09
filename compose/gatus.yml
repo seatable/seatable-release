@@ -39,6 +39,11 @@ services:
     labels:
       caddy: "${SEATABLE_SERVER_HOSTNAME}:${GATUS_PORT:-6220}"
       caddy.reverse_proxy: "{{upstreams 8080}}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
     networks:
       - frontend-net
       - backend-seatable-net
