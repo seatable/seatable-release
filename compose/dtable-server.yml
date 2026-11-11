@@ -1,6 +1,6 @@
 services:
   dtable-server:
-    image: ${DTABLE_SERVER_IMAGE:-seatable/dtable-server-js:7.0.13}
+    image: ${DTABLE_SERVER_IMAGE:-seatable/dtable-server-js:7.0.14}
     restart: unless-stopped
     container_name: dtable-server
     volumes:
