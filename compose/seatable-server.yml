@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:7.0.13}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:7.0.15}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -156,7 +156,7 @@ services:
       # more info at https://admin.seatable.com/upgrade/extra-upgrade-notice/
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:8.4.8-trixie}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:8.10-trixie}
     restart: unless-stopped
     container_name: redis
     environment:
