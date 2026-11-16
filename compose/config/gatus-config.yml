@@ -78,7 +78,7 @@ endpoints:
 
   - name: SeaTable SQL
     group: SeaTable
-    url: https://${SEATABLE_SERVER_HOSTNAME}/dtable-db/ping/
+    url: ${INNER_DTABLE_DB_URL}/ping/
     interval: 30s
     conditions:
       - "[STATUS] == 200"
@@ -87,7 +87,7 @@ endpoints:
 
   - name: SeaTable Server
     group: SeaTable
-    url: https://${SEATABLE_SERVER_HOSTNAME}/dtable-server/ping/
+    url: ${INNER_DTABLE_SERVER_URL}/ping/
     interval: 30s
     conditions:
       - "[STATUS] == 200"
