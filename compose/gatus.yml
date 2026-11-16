@@ -33,7 +33,7 @@ services:
       - GATUS_EMAIL_PORT=${SEATABLE_EMAIL_PORT:-}
       - GATUS_EMAIL_FROM=${SEATABLE_DEFAULT_FROM_EMAIL:-}
       # Allows multiple values (separated by commas)
-      - GATUS_EMAIL_TO=${GATUS_EMAIL_TO}
+      - GATUS_EMAIL_TO=${GATUS_EMAIL_TO:-}
     volumes:
       # Persist SQLite database
       - /opt/gatus:/data
