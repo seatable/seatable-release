@@ -19,14 +19,12 @@ services:
       # clean /tmp directory
       ofelia.job-exec.clean-tmp.command: "find /tmp -type f -mtime +3 -delete"
       ofelia.job-exec.clean-tmp.schedule: "@weekly"
-      
+
       # garbage collector
-      ofelia.job-exec.gc.command: "/opt/seatable/scripts/seatable.sh gc --rm-fs | grep -E 'damaged|removed|finished'"
+      ofelia.job-exec.gc.command: bash -c "set -o pipefail; /opt/seatable/scripts/seatable.sh gc --rm-fs | grep -E 'damaged|removed|finished'"
       ofelia.job-exec.gc.schedule: "@weekly"
       #ofelia.job-exec.gc.schedule: "0 15 3 * * *"  # ofeila v0.3 still requires seconds!
-      
-      # filesystem check
-      ofelia.job-exec.seaf-fsck.command: "/opt/seatable/seatable-server-latest/seaf-fsck.sh | grep -E 'corrupted|damaged|missing|finished'"
-      ofelia.job-exec.seaf-fsck.schedule: "@weekly"
 
-      
+      # filesystem check
+      ofelia.job-exec.seaf-fsck.command: bash -c "set -o pipefail; /opt/seatable/seatable-server-latest/seaf-fsck.sh | grep -E 'corrupted|damaged|missing|finished'"
+      ofelia.job-exec.seaf-fsck.schedule: "@weekly"
